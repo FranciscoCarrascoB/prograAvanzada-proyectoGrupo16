@@ -7,18 +7,25 @@ public class Main {
         String opcion;
         BufferedReader lector = new BufferedReader(new InputStreamReader(System.in));
 
-        System.out.println("Bienvenido al sistema");
-        System.out.println("Que desea hacer?");
-        System.out.println("1.Agregar elementos");
-        System.out.println("2.Mostrar lista");
+        System.out.println("Bienvenido al sistema\n¿Qué desea hacer?\n1. Agregar elementos\n2. Mostrar lista\n3. Salir");
         opcion = lector.readLine();
-
-        if(opcion == "1"){
-
-        }
-        else if(opcion == "2"){
-
+        
+        switch(opcion) {
+            case "1":
+                // Aquí va el código para agregar elementos
+                break;
+                
+            case "2":
+                // Aquí va el código para mostrar la lista
+                break;
+                
+            case "3":
+                System.out.println("Saliendo del sistema...");
+                break;
+                
+            default:
+                System.out.println("Opción no válida. Por favor seleccione 1, 2 o 3.");
+                break;
         }
     }
 }
-
