@@ -5,9 +5,9 @@ public class OrdenTrabajo {
     private Trabajador encargado; // Objeto de tipo Trabajador vinculado a la orden de trabajo
     private Analisis analisis; // Objeto de tipo Analisis vinculado a la orden
     private String estado; //Estado en el que se encuentra la orden de trabajo (En proceso, finalizada)
-                           // TODO: setEstado() debe limitar los estados posibles
-    private LocalDate fechaEstimada; // TODO: getFechaEstimada() o similar debería retornar un String formateado, probablemente...
+                           // TO DO: setEstado() debe limitar los estados posibles
+    private LocalDate fechaEstimada; // TO DO: getFechaEstimada() o similar debería retornar un String formateado, probablemente...
                                      // Formato (año-mes-dia)
 
-    // TODO: Se podría implementar un método que reciba un trabajador y retorne una lista de ordenes de las que esté encargado
+    // TO DO: Se podría implementar un método que reciba un trabajador y retorne una lista de ordenes de las que esté encargado
 }
