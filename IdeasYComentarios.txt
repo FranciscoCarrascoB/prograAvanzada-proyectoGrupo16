@@ -1,1 +1,1 @@
-
+-Cliente y Trabajador son clases diferentes, pero en concepto no tienen diferencias.
