@@ -150,7 +150,7 @@ public class Analisis {
             
             // Limpiar lista existente primero
             this.piezasNecesarias.clear();
-            
+            // Todos los casos son ejemplos; en un caso real, estos datos podrían venir de una base de datos
             switch (this.diagnostico.toLowerCase()) {
                 case "hardware":
                     this.piezasNecesarias.add("SKU-CPU-001");
