@@ -1,10 +1,12 @@
+import java.util.*;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class OrdenTrabajo {
     private Cliente cliente;// Objeto de tipo cliente vinculado a la orden de trabajo
     private Trabajador encargado;// Objeto de tipo Trabajador vinculado a la orden de trabajo
-    private Analisis analisis;// Objeto de tipo Analisis vinculado a la orden
+    private ArrayList<Analisis> listaAnalisis;// Objeto de tipo Analisis vinculado a la orden
     private String estado;// Estado en el que se encuentra la orden de trabajo (En proceso, finalizada)
     private LocalDate fechaEstimada;// Fecha estimada de finalizacion de orden ,formato (año-mes-dia)
     
@@ -13,7 +15,7 @@ public class OrdenTrabajo {
     public OrdenTrabajo(Cliente cliente, Trabajador encargado, Analisis analisis, String estado){//Constructor por defecto (Sin fecha)
         this.cliente = cliente;
         this.encargado = encargado;
-        this.analisis = analisis;
+        this.listaAnalisis = new ArrayList<>();
         this.estado = estado;
         this.fechaEstimada = (LocalDate.now()).plusDays(7);//Asigna fecha estimada a la proxima semana
     }
@@ -21,7 +23,7 @@ public class OrdenTrabajo {
     public OrdenTrabajo(Cliente cliente, Trabajador encargado, Analisis analisis, String estado,String fechaEstimada){//Constructor con fecha
         this.cliente = cliente;
         this.encargado = encargado;
-        this.analisis = analisis;
+        this.listaAnalisis = new ArrayList<>();
         this.estado = estado;
         setFechaEstimada(fechaEstimada);//Asigna fecha estimada a lo ingresado por el usuario
     }
@@ -46,21 +48,24 @@ public class OrdenTrabajo {
         this.encargado = encargado;
     }
 
-    public Analisis getAnalisis() {
-        return analisis;
-    }
-
-    public void setAnalisis(Analisis analisis) {
-        this.analisis = analisis;
-    }
 
     public String getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {// TO DO: Limitar entradas
+    public void setEstado(String estado) {
+        //Se definen los estados posibles
+        Set<String> estadosPosibles = new HashSet<>();
+        estadosPosibles.add("En progreso");
+        estadosPosibles.add("Completada");
+        estadosPosibles.add("Atrasada");
 
-        this.estado = estado;
+        if(!estadosPosibles.contains(estado)){//Si el estado ingresado no existe
+            this.estado = "En progreso";//Definir estado "En progreso"
+        }
+
+        else this.estado = estado;//Si no, definir como estado ingresado
+        
     }
 
     public String getFechaEstimada() {// Retorna la fecha estimada como String en formato (día-mes-año)
@@ -79,7 +84,8 @@ public class OrdenTrabajo {
         //El caso más corto de input es "1 día" o "1 mes", ambos strings de 5 de largo
         //Si el input fecha estimada tiene menos de 5 caracteres o el primer caracter no es un numero positivo
         if (fechaEstimada.length() < 5 || fechaEstimada.split(" ")[0].matches("\\d+")) {
-            throw new IllegalArgumentException("Formato incorrecto. Debe ser: '<número> dias/semanas/meses'");//Mensaje error
+            this.fechaEstimada = (LocalDate.now()).plusDays(7);//Asigna fecha por defecto
+            //throw new IllegalArgumentException("Formato incorrecto. Debe ser: '<número> dias/semanas/meses'"); Mensaje de error para más adelante
         }
 
         else if (fechaEstimada.contains("dia")) {
@@ -99,4 +105,20 @@ public class OrdenTrabajo {
     }
 
     //#endregion GETTERS Y SETTERS
+
+    public void agregarAnalisis(Analisis analisis) {
+        this.listaAnalisis.add(analisis);
+    }
+
+    public void listarAnalisis() {
+        if(listaAnalisis.isEmpty()){
+            return;
+        }
+
+        System.out.println("\n--- LISTA DE ÓRDENES ---");//FALTA COMPLETAR CON METODOS DE ANALISIS
+        for (Analisis analisis : listaAnalisis) {
+            //System.out.println(analisis.getDescripcion());
+        }
+        System.out.println("------------------------\n");
+    }
 }

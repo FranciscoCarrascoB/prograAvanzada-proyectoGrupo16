@@ -19,7 +19,11 @@ public class ListaOrdenes{
         System.out.println("\n--- LISTA DE ÓRDENES ---");
         for (OrdenTrabajo orden : ordenes) {
             //System.out.println(orden.getCliente());
+            System.out.println(orden.getCliente().getNombre());
+            //System.out.println(orden.getEncargado());
+            orden.listarAnalisis();
             System.out.println(orden.getEstado());
+            System.out.println(orden.getFechaEstimada());
         }
         System.out.println("------------------------\n");
     }
