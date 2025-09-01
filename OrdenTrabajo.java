@@ -12,20 +12,22 @@ public class OrdenTrabajo {
     
     //#region CONSTRUCTORES
 
-    public OrdenTrabajo(Cliente cliente, Trabajador encargado, Analisis analisis, String estado){//Constructor por defecto (Sin fecha)
+    // Constructor por defecto (Sin fecha)
+    public OrdenTrabajo(Cliente cliente, Trabajador encargado, String estado) {
         this.cliente = cliente;
         this.encargado = encargado;
         this.listaAnalisis = new ArrayList<>();
-        this.estado = estado;
-        this.fechaEstimada = (LocalDate.now()).plusDays(7);//Asigna fecha estimada a la proxima semana
+        setEstado(estado);
+        this.fechaEstimada = (LocalDate.now()).plusDays(7); // Asigna fecha estimada a la proxima semana
     }
 
-    public OrdenTrabajo(Cliente cliente, Trabajador encargado, Analisis analisis, String estado,String fechaEstimada){//Constructor con fecha
+    // Constructor con fecha
+    public OrdenTrabajo(Cliente cliente, Trabajador encargado, String estado, String fechaEstimada) {
         this.cliente = cliente;
         this.encargado = encargado;
         this.listaAnalisis = new ArrayList<>();
-        this.estado = estado;
-        setFechaEstimada(fechaEstimada);//Asigna fecha estimada a lo ingresado por el usuario
+        setEstado(estado);
+        setFechaEstimada(fechaEstimada); // Asigna fecha estimada a lo ingresado por el usuario
     }
 
     //#endregion CONSTRUCTORES
@@ -53,19 +55,20 @@ public class OrdenTrabajo {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public boolean setEstado(String estado) {
         //Se definen los estados posibles
         Set<String> estadosPosibles = new HashSet<>();
         estadosPosibles.add("En progreso");
         estadosPosibles.add("Completada");
         estadosPosibles.add("Atrasada");
 
-        if(!estadosPosibles.contains(estado)){//Si el estado ingresado no existe
-            this.estado = "En progreso";//Definir estado "En progreso"
+        if(!estadosPosibles.contains(estado)) {//Si el estado ingresado no existe retorna falso
+            this.estado = "Desconocido";
+            return false;
         }
 
-        else this.estado = estado;//Si no, definir como estado ingresado
-        
+        else this.estado = estado;//Si no, definir como estado ingresado y retorna true
+        return true;
     }
 
     public String getFechaEstimada() {// Retorna la fecha estimada como String en formato (día-mes-año)
@@ -83,8 +86,8 @@ public class OrdenTrabajo {
 
         //El caso más corto de input es "1 día" o "1 mes", ambos strings de 5 de largo
         //Si el input fecha estimada tiene menos de 5 caracteres o el primer caracter no es un numero positivo
-        if (fechaEstimada.length() < 5 || fechaEstimada.split(" ")[0].matches("\\d+")) {
-            this.fechaEstimada = (LocalDate.now()).plusDays(7);//Asigna fecha por defecto
+        if (fechaEstimada.length() < 5 || !fechaEstimada.split(" ")[0].matches("\\d+")) {
+            this.fechaEstimada = hoy.plusDays(7); // Asigna fecha por defecto
             //throw new IllegalArgumentException("Formato incorrecto. Debe ser: '<número> dias/semanas/meses'"); Mensaje de error para más adelante
         }
 
@@ -111,14 +114,27 @@ public class OrdenTrabajo {
     }
 
     public void listarAnalisis() {
-        if(listaAnalisis.isEmpty()){
-            return;
+        if (listaAnalisis.isEmpty()) {
+            System.out.println("Orden no tiene analisis. Falta diagnosticar el problema.");
         }
 
-        System.out.println("\n--- LISTA DE ÓRDENES ---");//FALTA COMPLETAR CON METODOS DE ANALISIS
-        for (Analisis analisis : listaAnalisis) {
-            //System.out.println(analisis.getDescripcion());
+        System.out.println("\n--- LISTA DE ANALISIS ---");
+        for (int i = 0; i < listaAnalisis.size(); i++) {
+            Analisis analisis = listaAnalisis.get(i);
+            System.out.println("    Analisis #" + (i + 1) + ":");
+            System.out.println("    Descripcion: " + analisis.getDescripcionProblema());
+            System.out.println("    Diagnostico: " + analisis.getDiagnostico());
+            
+            if (analisis.necesitaPiezas()) {
+                System.out.println("    Piezas requeridas (" + analisis.getCantidadPiezas() + "):");
+                ArrayList<String> piezas = analisis.getPiezasNecesarias();
+                for (String pieza : piezas) {
+                    System.out.println("      - " + pieza);
+                }
+            } else {
+                System.out.println("    Piezas requeridas: Ninguna");
+            }
+            System.out.println();
         }
-        System.out.println("------------------------\n");
     }
 }

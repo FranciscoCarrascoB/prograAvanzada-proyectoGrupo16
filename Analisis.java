@@ -1,10 +1,14 @@
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Analisis {
     private String descripcionProblema;
     private String diagnostico;
     private ArrayList<String> piezasNecesarias;
+
+    // Diagnósticos permitidos
+    private static final String[] DIAGNOSTICOS_PERMITIDOS = {
+        "Hardware", "Software", "Red", "Periféricos", "Otro"
+    };
 
     // Constructor por defecto
     public Analisis() {
@@ -18,191 +22,131 @@ public class Analisis {
         this.piezasNecesarias = new ArrayList<>();
     }
 
-    // Método para ingresar datos del análisis mediante consola
-    public void ingresarDatosAnalisis() {
-        Scanner scanner = new Scanner(System.in);
-        
-        System.out.println("\n=== INGRESO DE ANÁLISIS ===");
-        
-        // Ingreso de descripción del problema
-        System.out.print("Descripción del problema: ");
-        this.descripcionProblema = scanner.nextLine();
-        
-        // Ingreso de diagnóstico con validación
-        boolean diagnosticoValido = false;
-        while (!diagnosticoValido) {
-            System.out.print("Diagnóstico (Hardware/Software/Red/Periféricos/Otro): ");
-            String inputDiagnostico = scanner.nextLine();
-            
-            if (inputDiagnostico != null && !inputDiagnostico.trim().isEmpty()) {
-                this.setDiagnostico(inputDiagnostico);
-                diagnosticoValido = true;
-            } else {
-                System.out.println("Error: El diagnóstico no puede estar vacío.");
-            }
-        }
-        
-        // Opción para piezas necesarias
-        System.out.println("\n¿Se necesitan piezas para la reparación?");
-        System.out.println("1. Sí, necesito piezas");
-        System.out.println("2. No, no se necesitan piezas");
-        System.out.print("Seleccione una opción (1-2): ");
-        
-        String opcionPiezas = scanner.nextLine();
-        
-        switch (opcionPiezas) {
-            case "1":
-                ingresarPiezasNecesarias(scanner);
-                break;
-            case "2":
-                System.out.println("No se agregarán piezas al análisis.");
-                break;
-            default:
-                System.out.println("Opción no válida. No se agregarán piezas.");
-                break;
-        }
-        
-        System.out.println("Análisis completado exitosamente.");
-    }
-
-    // Método para ingresar piezas necesarias
-    private void ingresarPiezasNecesarias(Scanner scanner) {
-        System.out.println("\nIngreso de piezas necesarias:");
-        System.out.println("Opciones disponibles:");
-        System.out.println("1. Ingresar piezas manualmente");
-        System.out.println("2. Usar sugerencias basadas en el diagnóstico");
-        System.out.print("Seleccione una opción (1-2): ");
-        
-        String opcionIngreso = scanner.nextLine();
-        
-        switch (opcionIngreso) {
-            case "1":
-                ingresarPiezasManual(scanner);
-                break;
-            case "2":
-                this.setPiezasNecesarias(); // Usa sobrecarga sin parámetros
-                break;
-            default:
-                System.out.println("Opción no válida. Se usarán sugerencias del diagnóstico.");
-                this.setPiezasNecesarias();
-                break;
-        }
-    }
-
-    // Método para ingreso manual de piezas
-    private void ingresarPiezasManual(Scanner scanner) {
-        System.out.println("\nIngreso manual de piezas (ingrese 'fin' para terminar):");
-        String pieza;
-        do {
-            System.out.print("SKU de la pieza: ");
-            pieza = scanner.nextLine();
-            
-            if (!pieza.equalsIgnoreCase("fin") && !pieza.trim().isEmpty()) {
-                this.agregarPiezaNecesaria(pieza);
-                System.out.println("Pieza agregada: " + pieza);
-            } else if (pieza.trim().isEmpty() && !pieza.equalsIgnoreCase("fin")) {
-                System.out.println("Error: El SKU no puede estar vacío.");
-            }
-        } while (!pieza.equalsIgnoreCase("fin"));
-        
-        System.out.println("Ingreso manual de piezas finalizado.");
-    }
-
-    // Getters y setters
+    // Getters
     public String getDescripcionProblema() {
         return descripcionProblema;
-    }
-
-    public void setDescripcionProblema(String descripcionProblema) {
-        if (descripcionProblema != null && !descripcionProblema.trim().isEmpty()) {
-            this.descripcionProblema = descripcionProblema;
-        } else {
-            System.out.println("Error: La descripción no puede estar vacía.");
-        }
     }
 
     public String getDiagnostico() {
         return diagnostico;
     }
 
-    public void setDiagnostico(String diagnostico) {
-        // Validación de diagnóstico permitido
-        String[] diagnosticosPermitidos = {"Hardware", "Software", "Red", "Periféricos", "Otro"};
-        for (String permitido : diagnosticosPermitidos) {
-            if (permitido.equalsIgnoreCase(diagnostico)) {
-                this.diagnostico = diagnostico;
-                return;
-            }
-        }
-        this.diagnostico = "Otro";
-        System.out.println("Diagnóstico no reconocido. Se asignó como 'Otro'.");
-    }
-
     public ArrayList<String> getPiezasNecesarias() {
-        return piezasNecesarias;
+        return new ArrayList<>(piezasNecesarias); // Retorna copia
     }
 
-    // SOBRECARGA DE MÉTODOS
-    // Método 1: Sin parámetros - usa el diagnóstico para sugerir piezas
-    public void setPiezasNecesarias() {
-        if (this.diagnostico != null) {
-            System.out.println("\nSugiriendo piezas basadas en el diagnóstico: " + this.diagnostico);
-            
-            // Limpiar lista existente primero
-            this.piezasNecesarias.clear();
-            // Todos los casos son ejemplos; en un caso real, estos datos podrían venir de una base de datos
-            switch (this.diagnostico.toLowerCase()) {
-                case "hardware":
-                    this.piezasNecesarias.add("SKU-CPU-001");
-                    this.piezasNecesarias.add("SKU-RAM-001");
-                    System.out.println("Piezas sugeridas para Hardware agregadas: CPU, RAM");
-                    break;
-                case "software":
-                    this.piezasNecesarias.add("SKU-SO-001");
-                    this.piezasNecesarias.add("SKU-OFFICE-001");
-                    System.out.println("Piezas sugeridas para Software agregadas: Sistema Operativo, Suite Office");
-                    break;
-                case "red":
-                    this.piezasNecesarias.add("SKU-NIC-001");
-                    this.piezasNecesarias.add("SKU-CABLE-001");
-                    System.out.println("Piezas sugeridas para Red agregadas: Tarjeta de Red, Cable");
-                    break;
-                case "periféricos":
-                    this.piezasNecesarias.add("SKU-TECLADO-001");
-                    this.piezasNecesarias.add("SKU-MOUSE-001");
-                    System.out.println("Piezas sugeridas para Periféricos agregadas: Teclado, Mouse");
-                    break;
-                default:
-                    this.piezasNecesarias.add("SKU-GEN-001");
-                    System.out.println("Pieza general sugerida agregada: Componente General");
+    public static String[] getDiagnosticosPermitidos() {
+        return DIAGNOSTICOS_PERMITIDOS.clone(); // Retorna copia
+    }
+
+    // Setters
+    public boolean setDescripcionProblema(String descripcionProblema) {
+        if (descripcionProblema != null && !descripcionProblema.trim().isEmpty()) {
+            this.descripcionProblema = descripcionProblema.trim();
+            return true;
+        }
+        return false;
+    }
+
+    public boolean setDiagnostico(String diagnostico) {
+        if (esDiagnosticoValido(diagnostico)) {
+            this.diagnostico = diagnostico;
+            return true;
+        }
+        return false;
+    }
+
+    // Método para validar diagnóstico sin asignar
+    public boolean esDiagnosticoValido(String diagnostico) {
+        if (diagnostico == null) return false;
+        
+        for (String permitido : DIAGNOSTICOS_PERMITIDOS) {
+            if (permitido.equalsIgnoreCase(diagnostico)) {
+                return true;
             }
-        } else {
-            System.out.println("Error: Primero debe establecer un diagnóstico.");
         }
+        return false;
     }
 
-    // Método 2: Con parámetro - recibe una lista específica
-    public void setPiezasNecesarias(ArrayList<String> piezasNecesarias) {
-        if (piezasNecesarias != null) {
-            this.piezasNecesarias = piezasNecesarias;
-            System.out.println("Lista de piezas actualizada.");
-        } else {
-            System.out.println("Error: La lista de piezas no puede ser nula.");
+    // Sobrecarga del método setPiezasNecesarias; usa el diagnóstico para agregar piezas "por defecto"
+    public boolean setPiezasNecesarias() {
+        if (this.diagnostico == null) {
+            return false;
         }
+        
+        ArrayList<String> piezasSugeridas = obtenerPiezasSugeridas();
+        this.piezasNecesarias = piezasSugeridas;
+        return true;
+    }
+
+    // Método para asignar piezasNecesarias a apartir de una lista específica
+    public boolean setPiezasNecesarias(ArrayList<String> piezasNecesarias) {
+        if (piezasNecesarias != null) {
+            this.piezasNecesarias = new ArrayList<>(piezasNecesarias);
+            return true;
+        }
+        return false;
+    }
+
+    // Método auxiliar para obtener piezas sugeridas sin asignarlas
+    public ArrayList<String> obtenerPiezasSugeridas() {
+        ArrayList<String> sugerencias = new ArrayList<>();
+        
+        if (this.diagnostico == null) {
+            return sugerencias;
+        }
+        
+        switch (this.diagnostico.toLowerCase()) {
+            case "hardware":
+                sugerencias.add("SKU-CPU-001");
+                sugerencias.add("SKU-RAM-001");
+                break;
+            case "software":
+                sugerencias.add("SKU-SO-001");
+                sugerencias.add("SKU-OFFICE-001");
+                break;
+            case "red":
+                sugerencias.add("SKU-NIC-001");
+                sugerencias.add("SKU-CABLE-001");
+                break;
+            case "periféricos":
+                sugerencias.add("SKU-TECLADO-001");
+                sugerencias.add("SKU-MOUSE-001");
+                break;
+            default:
+                sugerencias.add("SKU-GEN-001");
+        }
+        
+        return sugerencias;
     }
 
     // Método para agregar pieza individual
-    public void agregarPiezaNecesaria(String sku) {
+    public boolean agregarPiezaNecesaria(String sku) {
         if (sku != null && !sku.trim().isEmpty()) {
-            this.piezasNecesarias.add(sku);
-        } else {
-            System.out.println("Error: El SKU no puede estar vacío.");
+            this.piezasNecesarias.add(sku.trim());
+            return true;
         }
+        return false;
+    }
+
+    // Método para limpiar todas las piezas
+    public void limpiarPiezasNecesarias() {
+        this.piezasNecesarias.clear();
+    }
+
+    // Método para remover pieza específica
+    public boolean removerPiezaNecesaria(String sku) {
+        return this.piezasNecesarias.remove(sku);
     }
 
     // Método para verificar si necesita piezas
     public boolean necesitaPiezas() {
         return !this.piezasNecesarias.isEmpty();
+    }
+
+    // Método para obtener cantidad de piezas
+    public int getCantidadPiezas() {
+        return this.piezasNecesarias.size();
     }
 
     // Método para verificar disponibilidad de piezas en inventario
@@ -213,18 +157,36 @@ public class Analisis {
         
         for (String sku : this.piezasNecesarias) {
             if (inventario.obtenerCantidadDisponible(sku) <= 0) {
-                System.out.println("Pieza no disponible: " + sku);
                 return false;
             }
         }
         return true;
     }
 
+    // Método para obtener piezas no disponibles
+    public ArrayList<String> obtenerPiezasNoDisponibles(Inventario inventario) {
+        ArrayList<String> noDisponibles = new ArrayList<>();
+        
+        for (String sku : this.piezasNecesarias) {
+            if (inventario.obtenerCantidadDisponible(sku) <= 0) {
+                noDisponibles.add(sku);
+            }
+        }
+        
+        return noDisponibles;
+    }
+
+    // Método para validar que el análisis esté completo
+    public boolean esAnalisisCompleto() {
+        return descripcionProblema != null && !descripcionProblema.trim().isEmpty() &&
+               diagnostico != null && !diagnostico.trim().isEmpty();
+    }
+
     // Método para mostrar el análisis en formato legible
     public void mostrarAnalisis() {
-        System.out.println("\n=== DETALLES DEL ANÁLISIS ===");
-        System.out.println("Descripción: " + (descripcionProblema != null ? descripcionProblema : "No especificada"));
-        System.out.println("Diagnóstico: " + (diagnostico != null ? diagnostico : "No especificado"));
+        System.out.println("\n=== DETALLES DEL ANALISIS ===");
+        System.out.println("Descripcion: " + (descripcionProblema != null ? descripcionProblema : "No especificada"));
+        System.out.println("Diagnostico: " + (diagnostico != null ? diagnostico : "No especificado"));
         
         if (this.necesitaPiezas()) {
             System.out.println("Piezas necesarias: " + piezasNecesarias.toString());
