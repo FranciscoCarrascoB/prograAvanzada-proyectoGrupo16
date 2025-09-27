@@ -352,7 +352,7 @@ public class Main {
         } catch (IllegalStateException e) {
             System.out.println("Error: " + e.getMessage());
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("Error: Indice de análisis invalido.");
+            System.out.println("Error: Indice de analisis invalido.");
         } catch (Exception e) {
             System.out.println("Error inesperado al eliminar analisis: " + e.getMessage());
         }
@@ -474,7 +474,7 @@ public class Main {
             return diagnosticos[opcionDiagnostico - 1];
             
         } catch (NumberFormatException e) {
-            System.out.println("Error: Debe ingresar un numero válido.");
+            System.out.println("Error: Debe ingresar un numero valido.");
             return null;
         } catch (IndexOutOfBoundsException e) {
             System.out.println("Error: " + e.getMessage());
