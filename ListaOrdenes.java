@@ -50,8 +50,8 @@ public class ListaOrdenes {
         System.out.println("========================");
     }
 
-    // TODO: Hacer metodos para listarOrdenes según ciertos filtros (fecha, cliente, encargado, estado)
-    // TODO: Se podría implementar un método que reciba un trabajador y retorne una lista de ordenes de las que esté encargado
+    // TO DO: Hacer metodos para listarOrdenes según ciertos filtros (fecha, cliente, encargado, estado)
+    // TO DO: Se podría implementar un método que reciba un trabajador y retorne una lista de ordenes de las que esté encargado
 }
 
 

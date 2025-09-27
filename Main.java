@@ -10,12 +10,12 @@ public class Main {
         // Datos iniciales
 
         // Clientes
-        Cliente cliente1 = new Cliente("12.345.678-9", "Pedro Rodrígez");
-        Cliente cliente2 = new Cliente("11.111.111-1", "María González");
+        Cliente cliente1 = new Cliente("12.345.678-9", "Pedro Rodriguez");
+        Cliente cliente2 = new Cliente("11.111.111-1", "Maria Gonzalez");
 
         // Trabajadores
-        Trabajador trabajador1 = new Trabajador("17.111.622-8", "Carlos López");
-        Trabajador trabajador2 = new Trabajador("10.039.628-9", "Ana Martínez");
+        Trabajador trabajador1 = new Trabajador("17.111.622-8", "Carlos Lopez");
+        Trabajador trabajador2 = new Trabajador("10.039.628-9", "Ana Martinez");
     
         // Ordenes de trabajo
         OrdenTrabajo orden1 = new OrdenTrabajo(cliente1, trabajador1, "En proceso", "1 semana");
@@ -24,13 +24,13 @@ public class Main {
         // Crear análisis para orden 1
         Analisis analisis1_1 = new Analisis("Monitor no enciende", "Hardware");
         analisis1_1.setPiezasNecesarias(new ArrayList<String>() {{ add("SKU-PANT-001"); }});
-        Analisis analisis1_2 = new Analisis("Teclado no responde", "Periféricos");
+        Analisis analisis1_2 = new Analisis("Teclado no responde", "Perifericos");
         analisis1_2.setPiezasNecesarias(); // Usar sugerencias automáticas
         
         // Crear análisis para orden 2
         Analisis analisis2_1 = new Analisis("Sistema operativo corrupto", "Software");
         analisis2_1.setPiezasNecesarias(); // Usar sugerencias automáticas
-        Analisis analisis2_2 = new Analisis("No hay conexión a internet", "Red");
+        Analisis analisis2_2 = new Analisis("No hay conexion a internet", "Red");
         analisis2_2.setPiezasNecesarias(); // Usar sugerencias automáticas
 
         // Agregar análisis a las órdenes
@@ -100,7 +100,7 @@ public class Main {
         System.out.println("5. Mostrar Ordenes + Analisis");
         System.out.println("6. Salir");
         System.out.println("==========================================");
-        System.out.print("Seleccione una opción (1-6): ");
+        System.out.print("Seleccione una opcion (1-6): ");
     }
 
     // MÉTODO AUXILIAR: Leer opción del menú
@@ -130,7 +130,7 @@ public class Main {
             System.out.print("Estado de la orden: ");
             String estado = scanner.nextLine().trim();
             if (estado.isEmpty()) {
-                throw new IllegalArgumentException("El estado no puede estar vacío.");
+                throw new IllegalArgumentException("El estado no puede estar vacio.");
             }
             
             // Ingresar fecha estimada
@@ -158,14 +158,14 @@ public class Main {
             String rutCliente = scanner.nextLine().trim();
             
             if (rutCliente.isEmpty()) {
-                throw new IllegalArgumentException("El RUT del cliente no puede estar vacío.");
+                throw new IllegalArgumentException("El RUT del cliente no puede estar vacio.");
             }
 
             System.out.print("Nombre del cliente: ");
             String nombreCliente = scanner.nextLine().trim();
             
             if (nombreCliente.isEmpty()) {
-                throw new IllegalArgumentException("El nombre del cliente no puede estar vacío.");
+                throw new IllegalArgumentException("El nombre del cliente no puede estar vacio.");
             }
             
             return new Cliente(rutCliente, nombreCliente);
@@ -184,14 +184,14 @@ public class Main {
             String rutTrabajador = scanner.nextLine().trim();
             
             if (rutTrabajador.isEmpty()) {
-                throw new IllegalArgumentException("El RUT del trabajador no puede estar vacío.");
+                throw new IllegalArgumentException("El RUT del trabajador no puede estar vacio.");
             }
 
             System.out.print("Nombre del trabajador: ");
             String nombreTrabajador = scanner.nextLine().trim();
             
             if (nombreTrabajador.isEmpty()) {
-                throw new IllegalArgumentException("El nombre del trabajador no puede estar vacío.");
+                throw new IllegalArgumentException("El nombre del trabajador no puede estar vacio.");
             }
             
             return new Trabajador(rutTrabajador, nombreTrabajador);
@@ -209,7 +209,7 @@ public class Main {
             String fechaInput = scanner.nextLine().trim();
             
             if (fechaInput.isEmpty()) {
-                throw new IllegalArgumentException("La fecha no puede estar vacía.");
+                throw new IllegalArgumentException("La fecha no puede estar vacia.");
             }
             
             return fechaInput;
@@ -222,12 +222,12 @@ public class Main {
 
     // Opción 2: Agregar Análisis a una Orden
     private static void agregarAnalisisAOrden() {
-        System.out.println("\n=== AGREGAR ANÁLISIS A ORDEN ===");
+        System.out.println("\n=== AGREGAR ANALISIS A ORDEN ===");
         
         try {
             // Verificar si hay órdenes
             if (!listaOrdenes.tieneOrdenes()) {
-                throw new IllegalStateException("No hay órdenes de trabajo disponibles. Primero debe crear una orden de trabajo.");
+                throw new IllegalStateException("No hay ordenes de trabajo disponibles. Primero debe crear una orden de trabajo.");
             }
             
             // Mostrar órdenes disponibles
@@ -244,23 +244,23 @@ public class Main {
             // Agregar análisis a la orden
             ordenSeleccionada.agregarAnalisis(nuevoAnalisis);
             
-            System.out.println("Análisis agregado exitosamente.");
+            System.out.println("Analisis agregado exitosamente.");
             
         } catch (IllegalStateException e) {
             System.out.println("Error: " + e.getMessage());
         } catch (Exception e) {
-            System.out.println("Error inesperado al agregar análisis: " + e.getMessage());
+            System.out.println("Error inesperado al agregar analisis: " + e.getMessage());
         }
     }
 
     // Opción 3: Editar Análisis
     private static void editarAnalisis() {
-        System.out.println("\n=== EDITAR ANÁLISIS ===");
+        System.out.println("\n=== EDITAR ANALISIS ===");
         
         try {
             // Verificar si hay órdenes
             if (!listaOrdenes.tieneOrdenes()) {
-                throw new IllegalStateException("No hay órdenes de trabajo disponibles.");
+                throw new IllegalStateException("No hay ordenes de trabajo disponibles.");
             }
             
             // Mostrar órdenes disponibles
@@ -272,15 +272,15 @@ public class Main {
             
             // Verificar si la orden tiene análisis
             if (ordenSeleccionada.getListaAnalisis().isEmpty()) {
-                throw new IllegalStateException("La orden seleccionada no tiene análisis para editar.");
+                throw new IllegalStateException("La orden seleccionada no tiene analisis para editar.");
             }
             
             // Mostrar análisis disponibles
-            System.out.println("\n--- Análisis disponibles ---");
+            System.out.println("\n--- Analisis disponibles ---");
             ArrayList<Analisis> listaAnalisis = ordenSeleccionada.getListaAnalisis();
             for (int i = 0; i < listaAnalisis.size(); i++) {
                 System.out.println((i + 1) + ". " + listaAnalisis.get(i).getDescripcionProblema() + 
-                                 " - Diagnóstico: " + listaAnalisis.get(i).getDiagnostico());
+                                 " - Diagnostico: " + listaAnalisis.get(i).getDiagnostico());
             }
             
             // Seleccionar análisis a editar
@@ -290,25 +290,25 @@ public class Main {
             // Editar el análisis
             editarDatosAnalisis(analisisSeleccionado);
             
-            System.out.println("Análisis editado exitosamente.");
+            System.out.println("Analisis editado exitosamente.");
             
         } catch (IllegalStateException e) {
             System.out.println("Error: " + e.getMessage());
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("Error: Índice de análisis inválido.");
+            System.out.println("Error: Indice de analisis invalido.");
         } catch (Exception e) {
-            System.out.println("Error inesperado al editar análisis: " + e.getMessage());
+            System.out.println("Error inesperado al editar analisis: " + e.getMessage());
         }
     }
 
     // Opción 4: Eliminar Análisis
     private static void eliminarAnalisis() {
-        System.out.println("\n=== ELIMINAR ANÁLISIS ===");
+        System.out.println("\n=== ELIMINAR ANALISIS ===");
         
         try {
             // Verificar si hay órdenes
             if (!listaOrdenes.tieneOrdenes()) {
-                throw new IllegalStateException("No hay órdenes de trabajo disponibles.");
+                throw new IllegalStateException("No hay ordenes de trabajo disponibles.");
             }
             
             // Mostrar órdenes disponibles
@@ -320,15 +320,15 @@ public class Main {
             
             // Verificar si la orden tiene análisis
             if (ordenSeleccionada.getListaAnalisis().isEmpty()) {
-                throw new IllegalStateException("La orden seleccionada no tiene análisis para eliminar.");
+                throw new IllegalStateException("La orden seleccionada no tiene analisis para eliminar.");
             }
             
             // Mostrar análisis disponibles
-            System.out.println("\n--- Análisis disponibles ---");
+            System.out.println("\n--- Analisis disponibles ---");
             ArrayList<Analisis> listaAnalisis = ordenSeleccionada.getListaAnalisis();
             for (int i = 0; i < listaAnalisis.size(); i++) {
                 System.out.println((i + 1) + ". " + listaAnalisis.get(i).getDescripcionProblema() + 
-                                 " - Diagnóstico: " + listaAnalisis.get(i).getDiagnostico());
+                                 " - Diagnostico: " + listaAnalisis.get(i).getDiagnostico());
             }
             
             // Seleccionar análisis a eliminar
@@ -336,42 +336,42 @@ public class Main {
             if (indiceAnalisis == -1) return;
             
             // Confirmar eliminación
-            System.out.print("¿Está seguro que desea eliminar este análisis? (s/n): ");
+            System.out.print("¿Esta seguro que desea eliminar este analisis? (s/n): ");
             String confirmacion = scanner.nextLine().trim().toLowerCase();
             
             if (!confirmacion.equals("s") && !confirmacion.equals("si")) {
-                System.out.println("Eliminación cancelada.");
+                System.out.println("Eliminacion cancelada.");
                 return;
             }
             
             // Eliminar el análisis
             Analisis analisisEliminado = listaAnalisis.remove(indiceAnalisis);
             
-            System.out.println("Análisis eliminado exitosamente: " + analisisEliminado.getDescripcionProblema());
+            System.out.println("Analisis eliminado exitosamente: " + analisisEliminado.getDescripcionProblema());
             
         } catch (IllegalStateException e) {
             System.out.println("Error: " + e.getMessage());
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("Error: Índice de análisis inválido.");
+            System.out.println("Error: Indice de análisis invalido.");
         } catch (Exception e) {
-            System.out.println("Error inesperado al eliminar análisis: " + e.getMessage());
+            System.out.println("Error inesperado al eliminar analisis: " + e.getMessage());
         }
     }
 
     // MÉTODO AUXILIAR: Seleccionar orden
     private static OrdenTrabajo seleccionarOrden() {
         try {
-            System.out.print("\nIngrese el número de la orden (1-" + listaOrdenes.getCantidadOrdenes() + "): ");
+            System.out.print("\nIngrese el numero de la orden (1-" + listaOrdenes.getCantidadOrdenes() + "): ");
             int numeroOrden = Integer.parseInt(scanner.nextLine().trim());
             
             if (numeroOrden < 1 || numeroOrden > listaOrdenes.getCantidadOrdenes()) {
-                throw new IndexOutOfBoundsException("Número de orden fuera de rango.");
+                throw new IndexOutOfBoundsException("Numero de orden fuera de rango.");
             }
             
             return listaOrdenes.obtenerOrden(numeroOrden - 1);
             
         } catch (NumberFormatException e) {
-            System.out.println("Error: Debe ingresar un número válido.");
+            System.out.println("Error: Debe ingresar un numero valido.");
             return null;
         } catch (IndexOutOfBoundsException e) {
             System.out.println("Error: " + e.getMessage());
@@ -388,7 +388,7 @@ public class Main {
             return listaAnalisis.get(indice);
             
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("Error: Índice de análisis inválido.");
+            System.out.println("Error: Indice de analisis invalido.");
             return null;
         }
     }
@@ -396,17 +396,17 @@ public class Main {
     // MÉTODO AUXILIAR: Seleccionar índice de análisis
     private static int seleccionarIndiceAnalisis(int totalAnalisis) {
         try {
-            System.out.print("\nIngrese el número del análisis (1-" + totalAnalisis + "): ");
+            System.out.print("\nIngrese el numero del analisis (1-" + totalAnalisis + "): ");
             int numeroAnalisis = Integer.parseInt(scanner.nextLine().trim());
             
             if (numeroAnalisis < 1 || numeroAnalisis > totalAnalisis) {
-                throw new IndexOutOfBoundsException("Número de análisis fuera de rango.");
+                throw new IndexOutOfBoundsException("Numero de analisis fuera de rango.");
             }
             
             return numeroAnalisis - 1; // Convertir a índice base 0
             
         } catch (NumberFormatException e) {
-            System.out.println("Error: Debe ingresar un número válido.");
+            System.out.println("Error: Debe ingresar un numero valido.");
             return -1;
         } catch (IndexOutOfBoundsException e) {
             System.out.println("Error: " + e.getMessage());
@@ -417,20 +417,20 @@ public class Main {
     // MÉTODO AUXILIAR: Editar datos del análisis
     private static void editarDatosAnalisis(Analisis analisis) {
         try {
-            System.out.println("\n--- Editando Análisis ---");
+            System.out.println("\n--- Editando Analisis ---");
             System.out.println("Valores actuales:");
-            System.out.println("Descripción: " + analisis.getDescripcionProblema());
-            System.out.println("Diagnóstico: " + analisis.getDiagnostico());
+            System.out.println("Descripcion: " + analisis.getDescripcionProblema());
+            System.out.println("Diagnostico: " + analisis.getDiagnostico());
             
             // Editar descripción
-            System.out.print("\nNueva descripción (Enter para mantener actual): ");
+            System.out.print("\nNueva descripcion (Enter para mantener actual): ");
             String nuevaDescripcion = scanner.nextLine().trim();
             if (!nuevaDescripcion.isEmpty()) {
                 analisis.setDescripcionProblema(nuevaDescripcion);
             }
             
             // Editar diagnóstico
-            System.out.println("\n¿Desea cambiar el diagnóstico? (s/n): ");
+            System.out.println("\n¿Desea cambiar el diagnostico? (s/n): ");
             String cambiarDiagnostico = scanner.nextLine().trim().toLowerCase();
             
             if (cambiarDiagnostico.equals("s") || cambiarDiagnostico.equals("si")) {
@@ -451,30 +451,30 @@ public class Main {
             }
             
         } catch (Exception e) {
-            System.out.println("Error al editar análisis: " + e.getMessage());
+            System.out.println("Error al editar analisis: " + e.getMessage());
         }
     }
 
     // MÉTODO AUXILIAR: Seleccionar diagnóstico
     private static String seleccionarDiagnostico() {
         try {
-            System.out.println("\nDiagnósticos disponibles:");
+            System.out.println("\nDiagnosticos disponibles:");
             String[] diagnosticos = Analisis.getDiagnosticosPermitidos();
             for (int i = 0; i < diagnosticos.length; i++) {
                 System.out.println((i + 1) + ". " + diagnosticos[i]);
             }
             
-            System.out.print("Seleccione un diagnóstico (1-" + diagnosticos.length + "): ");
+            System.out.print("Seleccione un diagnostico (1-" + diagnosticos.length + "): ");
             int opcionDiagnostico = Integer.parseInt(scanner.nextLine().trim());
             
             if (opcionDiagnostico < 1 || opcionDiagnostico > diagnosticos.length) {
-                throw new IndexOutOfBoundsException("Opción de diagnóstico fuera de rango.");
+                throw new IndexOutOfBoundsException("Opcion de diagnostico fuera de rango.");
             }
             
             return diagnosticos[opcionDiagnostico - 1];
             
         } catch (NumberFormatException e) {
-            System.out.println("Error: Debe ingresar un número válido.");
+            System.out.println("Error: Debe ingresar un numero válido.");
             return null;
         } catch (IndexOutOfBoundsException e) {
             System.out.println("Error: " + e.getMessage());
@@ -485,14 +485,14 @@ public class Main {
     // MÉTODO AUXILIAR: Crear análisis mediante input
     private static Analisis crearAnalisis() {
         try {
-            System.out.println("\n--- Crear Nuevo Análisis ---");
+            System.out.println("\n--- Crear Nuevo Analisis ---");
             
             // Descripción del problema
-            System.out.print("Descripción del problema: ");
+            System.out.print("Descripcion del problema: ");
             String descripcion = scanner.nextLine().trim();
             
             if (descripcion.isEmpty()) {
-                throw new IllegalArgumentException("La descripción no puede estar vacía.");
+                throw new IllegalArgumentException("La descripcion no puede estar vacia.");
             }
             
             // Diagnóstico
@@ -511,7 +511,7 @@ public class Main {
             System.out.println("Error: " + e.getMessage());
             return null;
         } catch (Exception e) {
-            System.out.println("Error inesperado al crear análisis: " + e.getMessage());
+            System.out.println("Error inesperado al crear analisis: " + e.getMessage());
             return null;
         }
     }
@@ -519,12 +519,12 @@ public class Main {
     // MÉTODO AUXILIAR: Mini-menú de configuración de piezas necesarias para un análisis
     private static void configurarPiezasAnalisis(Analisis analisis) {
         try {
-            System.out.println("\n--- Configuración de Piezas ---");
-            System.out.println("¿Se necesitan piezas para esta reparación?");
-            System.out.println("1. Sí, usar piezas sugeridas automáticamente");
-            System.out.println("2. Sí, ingresar piezas manualmente");
+            System.out.println("\n--- Configuracion de Piezas ---");
+            System.out.println("¿Se necesitan piezas para esta reparacion?");
+            System.out.println("1. Si, usar piezas sugeridas automaticamente");
+            System.out.println("2. Si, ingresar piezas manualmente");
             System.out.println("3. No se necesitan piezas");
-            System.out.print("Seleccione una opción (1-3): ");
+            System.out.print("Seleccione una opcion (1-3): ");
             
             String opcion = scanner.nextLine().trim();
             
@@ -543,11 +543,11 @@ public class Main {
                     break;
                     
                 case "3":
-                    System.out.println("No se agregarán piezas al análisis.");
+                    System.out.println("No se agregaran piezas al analisis.");
                     break;
                     
                 default:
-                    System.out.println("Opción no válida. No se agregarán piezas.");
+                    System.out.println("Opcion no valida. No se agregaran piezas.");
                     break;
             }
         } catch (Exception e) {
@@ -575,7 +575,7 @@ public class Main {
                         System.out.println("Error: No se pudo agregar la pieza.");
                     }
                 } else if (sku.isEmpty()) {
-                    System.out.println("Error: El SKU no puede estar vacío.");
+                    System.out.println("Error: El SKU no puede estar vacio.");
                 }
                 
             } while (!sku.equalsIgnoreCase("fin"));
@@ -590,10 +590,10 @@ public class Main {
     // Opción 5: Mostrar Órdenes y Análisis
     private static void mostrarOrdenesYAnalisis() {
         try {
-            System.out.println("\n=== ÓRDENES DE TRABAJO Y ANÁLISIS ===");
+            System.out.println("\n=== ORDENES DE TRABAJO Y ANALISIS ===");
             
             if (!listaOrdenes.tieneOrdenes()) {
-                throw new IllegalStateException("No hay órdenes de trabajo registradas.");
+                throw new IllegalStateException("No hay ordenes de trabajo registradas.");
             }
             
             listaOrdenes.listarOrdenes();
@@ -601,7 +601,7 @@ public class Main {
         } catch (IllegalStateException e) {
             System.out.println("Error: " + e.getMessage());
         } catch (Exception e) {
-            System.out.println("Error inesperado al mostrar órdenes: " + e.getMessage());
+            System.out.println("Error inesperado al mostrar ordenes: " + e.getMessage());
         }
     }
 }

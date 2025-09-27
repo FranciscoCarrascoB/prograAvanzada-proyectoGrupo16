@@ -7,7 +7,7 @@ public class Analisis {
 
     // Diagnósticos permitidos
     private static final String[] DIAGNOSTICOS_PERMITIDOS = {
-        "Hardware", "Software", "Red", "Periféricos", "Otro"
+        "Hardware", "Software", "Red", "Perifericos", "Otro"
     };
 
     // Constructor por defecto
@@ -109,7 +109,7 @@ public class Analisis {
                 sugerencias.add("SKU-NIC-001");
                 sugerencias.add("SKU-CABLE-001");
                 break;
-            case "periféricos":
+            case "perifericos":
                 sugerencias.add("SKU-TECLADO-001");
                 sugerencias.add("SKU-MOUSE-001");
                 break;
@@ -192,14 +192,14 @@ public class Analisis {
             System.out.println("Piezas necesarias: " + piezasNecesarias.toString());
             System.out.println("Total de piezas requeridas: " + piezasNecesarias.size());
         } else {
-            System.out.println("Piezas necesarias: No se requieren piezas para esta reparación");
+            System.out.println("Piezas necesarias: No se requieren piezas para esta reparacion");
         }
     }
 
     // Método para usar en listarAnalisis() de OrdenTrabajo
     public String getResumenAnalisis() {
         StringBuilder resumen = new StringBuilder();
-        resumen.append("Diagnóstico: ").append(diagnostico != null ? diagnostico : "No especificado")
+        resumen.append("Diagnostico: ").append(diagnostico != null ? diagnostico : "No especificado")
                .append(" | Piezas: ").append(necesitaPiezas() ? piezasNecesarias.size() : "0");
         return resumen.toString();
     }
