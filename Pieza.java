@@ -46,6 +46,7 @@ public class Pieza {
     }
 
     // Métodos
+    
     public boolean hayStock(int cantidadNecesaria) {
         return this.cantidadDisponible >= cantidadNecesaria;
     }

@@ -1,18 +1,15 @@
 import java.util.*;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class OrdenTrabajo {
-    private Cliente cliente;// Objeto de tipo cliente vinculado a la orden de trabajo
-    private Trabajador encargado;// Objeto de tipo Trabajador vinculado a la orden de trabajo
-    private ArrayList<Analisis> listaAnalisis;// Objeto de tipo Analisis vinculado a la orden
-    private String estado;// Estado en el que se encuentra la orden de trabajo (En proceso, finalizada)
-    private LocalDate fechaEstimada;// Fecha estimada de finalizacion de orden ,formato (año-mes-dia)
-    
-    //#region CONSTRUCTORES
+    private Cliente cliente;    // Objeto de tipo cliente vinculado a la orden de trabajo
+    private Trabajador encargado;   // Objeto de tipo Trabajador vinculado a la orden de trabajo
+    private ArrayList<Analisis> listaAnalisis;  // Objeto de tipo Analisis vinculado a la orden
+    private String estado;  // Estado en el que se encuentra la orden de trabajo (En proceso, finalizada)
+    private LocalDate fechaEstimada;    // Fecha estimada de finalizacion de orden ,formato (año-mes-dia)
 
-    // Constructor por defecto (Sin fecha)
+    // Constructor por defecto (sin fecha)
     public OrdenTrabajo(Cliente cliente, Trabajador encargado, String estado) {
         this.cliente = cliente;
         this.encargado = encargado;
@@ -30,29 +27,39 @@ public class OrdenTrabajo {
         setFechaEstimada(fechaEstimada); // Asigna fecha estimada a lo ingresado por el usuario
     }
 
-    //#endregion CONSTRUCTORES
-
-    //#region GETTERS Y SETTERS
-
+    // Getters
     public Cliente getCliente() {
         return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
     }
 
     public Trabajador getEncargado() {
         return encargado;
     }
 
-    public void setEncargado(Trabajador encargado) {
-        this.encargado = encargado;
-    }
-
-
     public String getEstado() {
         return estado;
+    }
+
+    public ArrayList<Analisis> getListaAnalisis() {
+        return listaAnalisis;
+    }
+
+    public String getFechaEstimada() {  // Retorna la fecha estimada como String en formato (día-mes-año)
+        String fechaEstimadaString;
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+
+        fechaEstimadaString = this.fechaEstimada.format(formato);
+
+        return fechaEstimadaString;
+    }
+
+    // Setters
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public void setEncargado(Trabajador encargado) {
+        this.encargado = encargado;
     }
 
     public boolean setEstado(String estado) {
@@ -62,33 +69,25 @@ public class OrdenTrabajo {
         estadosPosibles.add("Completada");
         estadosPosibles.add("Atrasada");
 
-        if(!estadosPosibles.contains(estado)) {//Si el estado ingresado no existe retorna falso
+        if(!estadosPosibles.contains(estado)) { //Si el estado ingresado no existe, retorna falso
             this.estado = "Desconocido";
             return false;
         }
 
-        else this.estado = estado;//Si no, definir como estado ingresado y retorna true
+        else this.estado = estado;  //Si no, definir como estado ingresado y retorna true
         return true;
-    }
-
-    public String getFechaEstimada() {// Retorna la fecha estimada como String en formato (día-mes-año)
-        String fechaEstimadaString;
-        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-
-        fechaEstimadaString = this.fechaEstimada.format(formato);
-
-        return fechaEstimadaString;
     }
 
     public void setFechaEstimada(String fechaEstimada) {//
         LocalDate hoy = LocalDate.now();
-        fechaEstimada.trim().toLowerCase();//Elimina espacios antes y despues del texto y lo convierte a minusculas para evitar errores
+        //Elimina espacios antes y despues del texto y lo convierte a minusculas para evitar errores
+        fechaEstimada.trim().toLowerCase();
 
-        //El caso más corto de input es "1 día" o "1 mes", ambos strings de 5 de largo
-        //Si el input fecha estimada tiene menos de 5 caracteres o el primer caracter no es un numero positivo
+        //  El caso más corto de input es "1 día" o "1 mes", ambos strings de 5 de largo
+        //  Si el input fecha estimada tiene menos de 5 caracteres o el primer caracter no es un numero positivo...
         if (fechaEstimada.length() < 5 || !fechaEstimada.split(" ")[0].matches("\\d+")) {
             this.fechaEstimada = hoy.plusDays(7); // Asigna fecha por defecto
-            //throw new IllegalArgumentException("Formato incorrecto. Debe ser: '<número> dias/semanas/meses'"); Mensaje de error para más adelante
+            // throw new IllegalArgumentException("Formato incorrecto. Debe ser: '<número> dias/semanas/meses'"); // Mensaje de error para más adelante
         }
 
         else if (fechaEstimada.contains("dia")) {
@@ -107,7 +106,7 @@ public class OrdenTrabajo {
         }
     }
 
-    //#endregion GETTERS Y SETTERS
+    // Métodos
 
     public void agregarAnalisis(Analisis analisis) {
         this.listaAnalisis.add(analisis);
@@ -116,9 +115,10 @@ public class OrdenTrabajo {
     public void listarAnalisis() {
         if (listaAnalisis.isEmpty()) {
             System.out.println("Orden no tiene analisis. Falta diagnosticar el problema.");
+            return;
         }
 
-        System.out.println("\n--- LISTA DE ANALISIS ---");
+        System.out.println("--- LISTA DE ANALISIS ---\n");
         for (int i = 0; i < listaAnalisis.size(); i++) {
             Analisis analisis = listaAnalisis.get(i);
             System.out.println("    Analisis #" + (i + 1) + ":");
@@ -134,7 +134,7 @@ public class OrdenTrabajo {
             } else {
                 System.out.println("    Piezas requeridas: Ninguna");
             }
-            System.out.println();
+            System.out.println(); // Línea en blanco entre análisis
         }
     }
 }

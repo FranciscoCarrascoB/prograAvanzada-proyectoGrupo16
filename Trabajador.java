@@ -8,17 +8,19 @@ public class Trabajador {
         this.nombre = nombre;
     }
 
-    // Getters y setters
+    // Getters
     public String getRut() {
         return rut;
     }
 
-    public void setRut(String rut) {
-        this.rut = rut;
-    }
-
     public String getNombre() {
         return nombre;
+    }
+
+
+    // Setters
+    public void setRut(String rut) {
+        this.rut = rut;
     }
 
     public void setNombre(String nombre) {

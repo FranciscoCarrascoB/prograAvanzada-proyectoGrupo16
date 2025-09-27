@@ -3,9 +3,12 @@ import java.util.ArrayList;
 public class ListaOrdenes {
     private ArrayList<OrdenTrabajo> ordenes; // ArrayList que contiene las ordenes de trabajo
 
+    // Constructor
     public ListaOrdenes() {
         this.ordenes = new ArrayList<>();
     }
+
+    // Métodos
 
     public void agregarOrden(OrdenTrabajo orden) {
         ordenes.add(orden);
@@ -31,11 +34,11 @@ public class ListaOrdenes {
         if (ordenes.isEmpty())
             return;
 
-        System.out.println("\n--- LISTA DE ORDENES ---");
+        System.out.println("\n=== LISTA DE ORDENES ===\n");
         for (int i = 0; i < ordenes.size(); i++) {
             OrdenTrabajo orden = ordenes.get(i);
             
-            System.out.println("=== ORDEN #" + (i + 1) + " ===");
+            System.out.println("====== ORDEN #" + (i + 1) + " ======");
             System.out.println("Cliente: " + orden.getCliente().getNombre());
             System.out.println("Encargado: " + orden.getEncargado().getNombre());
             System.out.println("Estado: " + orden.getEstado());
@@ -43,15 +46,11 @@ public class ListaOrdenes {
             
             // Llamar al método listarAnalisis() de la orden
             orden.listarAnalisis();
-            
-            if (i < ordenes.size() - 1) {
-                System.out.println("==========================================");
-            }
         }
-        System.out.println("------------------------\n");
+        System.out.println("========================");
     }
 
-    // TODO: Hacer metodos para listarOrdenes según ciertos filtros (fecha,cliente,encargado,estado)
+    // TODO: Hacer metodos para listarOrdenes según ciertos filtros (fecha, cliente, encargado, estado)
     // TODO: Se podría implementar un método que reciba un trabajador y retorne una lista de ordenes de las que esté encargado
 }
 

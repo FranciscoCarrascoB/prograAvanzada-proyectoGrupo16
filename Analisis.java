@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 
 public class Analisis {
-    private String descripcionProblema;
-    private String diagnostico;
-    private ArrayList<String> piezasNecesarias;
+    private String descripcionProblema; // Descripción del problema reportado
+    private String diagnostico; // Diagnóstico realizado
+    private ArrayList<String> piezasNecesarias; // Lista de SKUs de piezas necesarias para la reparación
 
     // Diagnósticos permitidos
     private static final String[] DIAGNOSTICOS_PERMITIDOS = {
@@ -215,8 +215,8 @@ public class Analisis {
     }
 }
 
-    // **Idea: Sobrecarga de método setPiezasNecesarias. Si no se proveen argumentos, utilizar this.diagnostico para 
+    // Idea: Sobrecarga de método setPiezasNecesarias. Si no se proveen argumentos, utilizar this.diagnostico para 
     // poblar la lista de piezas necesarias.
     
-    // Idea: Si nos sobra tiempo, implementar una orden de armado de PC 
-    // Plantillas de piezasNecesarias que representan las gamas prehechas (baja, media, alta)
+    // Idea: Si nos sobra tiempo, implementar una orden de armado de PC.
+    // Plantillas de piezasNecesarias que representan las gamas prehechas (baja, media, alta).

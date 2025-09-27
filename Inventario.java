@@ -11,6 +11,7 @@ public class Inventario {
     }
 
     // Métodos
+
     public boolean agregarPieza(Pieza pieza) {
         if (pieza != null && pieza.getSKU() != null) {
             this.inventario.put(pieza.getSKU(), pieza); // (SKU, Pieza)
