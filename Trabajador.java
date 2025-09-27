@@ -1,29 +1,16 @@
-public class Trabajador {
-    private String rut;
-    private String nombre;
+public class Trabajador extends Persona {
+
+    String rol; // Rol del trabajador
 
     // Constructor
     public Trabajador(String rut, String nombre) {
-        this.rut = rut;
-        this.nombre = nombre;
+        super(rut, nombre);
+        this.rol = "Técnico"; // Asigna rol por defecto
     }
 
-    // Getters
-    public String getRut() {
-        return rut;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-
-    // Setters
-    public void setRut(String rut) {
-        this.rut = rut;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    // SIA 2.7: Implementación de sobreescritura del método obtenerInformacion()
+    @Override
+    public String obtenerInformacion() {
+        return "Trabajador: " + nombre + " (" + rol + " , RUT: " + rut + ")";
     }
 }

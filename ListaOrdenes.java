@@ -46,8 +46,8 @@ public class ListaOrdenes {
             OrdenTrabajo orden = ordenes.get(i);
             
             System.out.println("====== ORDEN #" + (i + 1) + " ======");
-            System.out.println("Cliente: " + orden.getCliente().getNombre());
-            System.out.println("Encargado: " + orden.getEncargado().getNombre());
+            System.out.println(orden.getCliente().obtenerInformacion());
+            System.out.println(orden.getEncargado().obtenerInformacion());
             System.out.println("Estado: " + orden.getEstado());
             System.out.println("Fecha Estimada: " + orden.getFechaEstimada());
             

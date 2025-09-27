@@ -1,28 +1,28 @@
-public class Cliente {
-    private String rut; // RUT del cliente
-    private String nombre; // Nombre del cliente
+public class Cliente extends Persona {
+
+    int puntosFidelidad; // Puntos de fidelidad del cliente (por implementar...)
 
     // Constructor
-    public Cliente(String rut, String nombre){
-        this.rut = rut;
-        this.nombre = nombre;
+    public Cliente(String rut, String nombre) {
+        super(rut, nombre);
+        this.puntosFidelidad = 0;
     }
 
-    // Getters
-    public String getRut() {
-        return rut;
+    public int getPuntosFidelidad() {
+        return puntosFidelidad;
     }
 
-    public String getNombre() {
-        return nombre;
+    public void setPuntosFidelidad(int puntos) {
+        puntosFidelidad = puntos;
     }
 
-    // Setters
-    public void setRut(String rut) {
-        this.rut = rut;
+    public void agregarPuntosFidelidad(int puntos) {
+        puntosFidelidad += puntos;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    // SIA 2.7: Implementación de sobreescritura del método obtenerInformacion()
+    @Override
+    public String obtenerInformacion() {
+        return "Trabajador: " + nombre + " (RUT: " + rut + " Puntos de fidelidad: " + puntosFidelidad + ")";
     }
 }

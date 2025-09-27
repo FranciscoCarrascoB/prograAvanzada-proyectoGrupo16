@@ -176,7 +176,7 @@ public class Analisis {
         
         return noDisponibles;
     }
-
+    
     // Método para validar que el análisis esté completo
     public boolean esAnalisisCompleto() {
         return descripcionProblema != null && !descripcionProblema.trim().isEmpty() &&
