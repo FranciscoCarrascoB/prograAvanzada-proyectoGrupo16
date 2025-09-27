@@ -40,7 +40,10 @@ public class OrdenTrabajo {
         return estado;
     }
 
-    public ArrayList<Analisis> getListaAnalisis() {
+    public ArrayList<Analisis> getListaAnalisis() throws ListaAnalisisVaciaException {
+        if (listaAnalisis.isEmpty()) {
+            throw new ListaAnalisisVaciaException("La orden de trabajo no tiene análisis.");
+        }
         return listaAnalisis;
     }
 
@@ -110,6 +113,13 @@ public class OrdenTrabajo {
 
     public void agregarAnalisis(Analisis analisis) {
         this.listaAnalisis.add(analisis);
+    }
+
+    public Analisis eliminarAnalisis(int indice) {
+        if (indice >= 0 && indice < listaAnalisis.size()) {
+            return listaAnalisis.remove(indice);
+        }
+        return null;
     }
 
     public void listarAnalisis() {

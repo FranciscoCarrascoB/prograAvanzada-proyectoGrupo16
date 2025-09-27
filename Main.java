@@ -56,18 +56,24 @@ public class Main {
                         agregarOrdenTrabajo();
                         break;
                     case 2:
-                        agregarAnalisisAOrden();
+                        modificarOrdenTrabajo();
                         break;
                     case 3:
-                        editarAnalisis();
+                        eliminarOrdenTrabajo();
                         break;
                     case 4:
-                        eliminarAnalisis();
+                        agregarAnalisisAOrden();
                         break;
                     case 5:
-                        mostrarOrdenesYAnalisis();
+                        editarAnalisis();
                         break;
                     case 6:
+                        eliminarAnalisis();
+                        break;
+                    case 7:
+                        mostrarOrdenesYAnalisis();
+                        break;
+                    case 8:
                         System.out.println("¡Gracias por usar el sistema!");
                         // Salir
                         break;
@@ -79,12 +85,12 @@ public class Main {
                 System.out.println("Por favor, intente nuevamente.");
             }
             
-            if (opcion != 6) {
+            if (opcion != 8) {
                 System.out.println("\nPresione Enter para continuar...");
                 scanner.nextLine();
             }
             
-        } while (opcion != 6);
+        } while (opcion != 8);
         
         scanner.close();
     }
@@ -93,14 +99,19 @@ public class Main {
         System.out.println("\n==========================================");
         System.out.println("           MENU PRINCIPAL");
         System.out.println("==========================================");
+        System.out.println("--- Gestión de Ordenes ---");
         System.out.println("1. Agregar Orden de Trabajo");
-        System.out.println("2. Agregar Analisis a una Orden");
-        System.out.println("3. Editar Analisis");
-        System.out.println("4. Eliminar Analisis");
-        System.out.println("5. Mostrar Ordenes + Analisis");
-        System.out.println("6. Salir");
+        System.out.println("2. Modificar Orden de Trabajo");
+        System.out.println("3. Eliminar Orden de Trabajo");
+        System.out.println("\n--- Gestión de Análisis ---");
+        System.out.println("4. Agregar Analisis a una Orden");
+        System.out.println("5. Editar Analisis");
+        System.out.println("6. Eliminar Analisis");
+        System.out.println("\n--- Sistema ---");
+        System.out.println("7. Mostrar Ordenes + Analisis");
+        System.out.println("8. Salir");
         System.out.println("==========================================");
-        System.out.print("Seleccione una opcion (1-6): ");
+        System.out.print("Seleccione una opcion (1-8): ");
     }
 
     // MÉTODO AUXILIAR: Leer opción del menú
@@ -220,7 +231,111 @@ public class Main {
         }
     }
 
-    // Opción 2: Agregar Análisis a una Orden
+    // METODO AUXILIAR: Seleccionar índice de orden
+    private static int seleccionarIndiceOrden() {
+        try {
+            System.out.print("\nIngrese el numero de la orden (1-" + listaOrdenes.getCantidadOrdenes() + "): ");
+            int numeroOrden = Integer.parseInt(scanner.nextLine().trim());
+
+            if (numeroOrden < 1 || numeroOrden > listaOrdenes.getCantidadOrdenes()) {
+                throw new IndexOutOfBoundsException("Numero de orden fuera de rango.");
+            }
+            
+            return numeroOrden - 1;
+
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Debe ingresar un numero valido.");
+            return -1;
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Error: " + e.getMessage());
+            return -1;
+        }
+    }
+
+    // Opción 2: Modificar Orden de Trabajo
+    private static void modificarOrdenTrabajo() {
+        System.out.println("\n=== MODIFICAR ORDEN DE TRABAJO ===");
+        
+        try {
+            if (!listaOrdenes.tieneOrdenes()) {
+                throw new IllegalStateException("No hay ordenes de trabajo para modificar.");
+            }
+            
+            listaOrdenes.listarOrdenes();
+            OrdenTrabajo orden = seleccionarOrden();
+            if (orden == null) return;
+
+            System.out.println("\n--- Editando Orden de Trabajo ---");
+            System.out.println("Deje el campo en blanco y presione Enter para mantener el valor actual.");
+
+            System.out.print("Nuevo estado (" + orden.getEstado() + "): ");
+            String nuevoEstado = scanner.nextLine().trim();
+            if (!nuevoEstado.isEmpty()) {
+                orden.setEstado(nuevoEstado);
+            }
+
+            System.out.print("Nueva fecha estimada (" + orden.getFechaEstimada() + "): ");
+            String nuevaFecha = scanner.nextLine().trim();
+            if (!nuevaFecha.isEmpty()) {
+                orden.setFechaEstimada(nuevaFecha);
+            }
+
+            System.out.print("\n¿Desea cambiar el cliente actual (" + orden.getCliente().getNombre() + ")? (s/n): ");
+            if (scanner.nextLine().trim().equalsIgnoreCase("s")) {
+                Cliente nuevoCliente = crearCliente();
+                if (nuevoCliente != null) {
+                    orden.setCliente(nuevoCliente);
+                }
+            }
+
+            System.out.print("\n¿Desea cambiar el trabajador encargado (" + orden.getEncargado().getNombre() + ")? (s/n): ");
+            if (scanner.nextLine().trim().equalsIgnoreCase("s")) {
+                Trabajador nuevoEncargado = crearTrabajador();
+                if (nuevoEncargado != null) {
+                    orden.setEncargado(nuevoEncargado);
+                }
+            }
+
+            System.out.println("\nOrden de trabajo modificada exitosamente.");
+
+        } catch (IllegalStateException e) {
+            System.out.println("Error: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error inesperado al modificar la orden: " + e.getMessage());
+        }
+    }
+
+    // Opción 4: Eliminar Orden de Trabajo
+     private static void eliminarOrdenTrabajo() {
+        System.out.println("\n=== ELIMINAR ORDEN DE TRABAJO ===");
+        
+        try {
+            if (!listaOrdenes.tieneOrdenes()) {
+                throw new IllegalStateException("No hay ordenes de trabajo para eliminar.");
+            }
+
+            listaOrdenes.listarOrdenes();
+            int indice = seleccionarIndiceOrden();
+            if (indice == -1) return; // El usuario canceló o hubo un error
+
+            System.out.print("¿Esta seguro que desea eliminar esta orden de trabajo? Esta accion no se puede deshacer. (s/n): ");
+            String confirmacion = scanner.nextLine().trim().toLowerCase();
+
+            if (confirmacion.equals("s") || confirmacion.equals("si")) {
+                OrdenTrabajo eliminada = listaOrdenes.eliminarOrden(indice);
+                System.out.println("Orden de trabajo para el cliente '" + eliminada.getCliente().getNombre() + "' eliminada exitosamente.");
+            } else {
+                System.out.println("Eliminacion cancelada.");
+            }
+
+        } catch (IllegalStateException | IndexOutOfBoundsException e) {
+            System.out.println("Error: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error inesperado al eliminar la orden: " + e.getMessage());
+        }
+    }
+
+    // Opción 5: Agregar Análisis a una Orden
     private static void agregarAnalisisAOrden() {
         System.out.println("\n=== AGREGAR ANALISIS A ORDEN ===");
         
@@ -253,7 +368,7 @@ public class Main {
         }
     }
 
-    // Opción 3: Editar Análisis
+    // Opción 5: Editar Análisis
     private static void editarAnalisis() {
         System.out.println("\n=== EDITAR ANALISIS ===");
         
@@ -270,13 +385,9 @@ public class Main {
             OrdenTrabajo ordenSeleccionada = seleccionarOrden();
             if (ordenSeleccionada == null) return;
             
-            // Verificar si la orden tiene análisis
-            if (ordenSeleccionada.getListaAnalisis().isEmpty()) {
-                throw new IllegalStateException("La orden seleccionada no tiene analisis para editar.");
-            }
-            
             // Mostrar análisis disponibles
             System.out.println("\n--- Analisis disponibles ---");
+            // Si la lista de análisis está vacía, getListaAnalisis() lanzará una excepción personalizada
             ArrayList<Analisis> listaAnalisis = ordenSeleccionada.getListaAnalisis();
             for (int i = 0; i < listaAnalisis.size(); i++) {
                 System.out.println((i + 1) + ". " + listaAnalisis.get(i).getDescripcionProblema() + 
@@ -292,16 +403,18 @@ public class Main {
             
             System.out.println("Analisis editado exitosamente.");
             
+        // Capturar excepción personalizada si la lista de análisis está vacía
+        } catch (ListaAnalisisVaciaException e) {
+            System.out.println("Error: " + e.getMessage());
         } catch (IllegalStateException e) {
             System.out.println("Error: " + e.getMessage());
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println("Error: Indice de analisis invalido.");
+        // Error genérico para capturar cualquier otro error inesperado
         } catch (Exception e) {
             System.out.println("Error inesperado al editar analisis: " + e.getMessage());
         }
     }
 
-    // Opción 4: Eliminar Análisis
+    // Opción 6: Eliminar Análisis
     private static void eliminarAnalisis() {
         System.out.println("\n=== ELIMINAR ANALISIS ===");
         
@@ -345,7 +458,10 @@ public class Main {
             }
             
             // Eliminar el análisis
-            Analisis analisisEliminado = listaAnalisis.remove(indiceAnalisis);
+            Analisis analisisEliminado = ordenSeleccionada.eliminarAnalisis(indiceAnalisis);
+            if (analisisEliminado == null) {
+                throw new IllegalStateException("No se pudo eliminar el analisis. Indice invalido.");
+            }
             
             System.out.println("Analisis eliminado exitosamente: " + analisisEliminado.getDescripcionProblema());
             
@@ -436,7 +552,11 @@ public class Main {
             if (cambiarDiagnostico.equals("s") || cambiarDiagnostico.equals("si")) {
                 String nuevoDiagnostico = seleccionarDiagnostico();
                 if (nuevoDiagnostico != null) {
-                    analisis.setDiagnostico(nuevoDiagnostico);
+                    try {
+                        analisis.setDiagnostico(nuevoDiagnostico);
+                    } catch (DiagnosticoInvalidoException e) {
+                        System.out.println("Error: " + e.getMessage());
+                    }
                 }
             }
             
@@ -587,7 +707,7 @@ public class Main {
         }
     }
 
-    // Opción 5: Mostrar Órdenes y Análisis
+    // Opción 7: Mostrar Órdenes y Análisis
     private static void mostrarOrdenesYAnalisis() {
         try {
             System.out.println("\n=== ORDENES DE TRABAJO Y ANALISIS ===");

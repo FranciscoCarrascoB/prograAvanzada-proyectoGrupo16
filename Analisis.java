@@ -48,12 +48,13 @@ public class Analisis {
         return false;
     }
 
-    public boolean setDiagnostico(String diagnostico) {
-        if (esDiagnosticoValido(diagnostico)) {
-            this.diagnostico = diagnostico;
-            return true;
+    public void setDiagnostico(String diagnostico) throws DiagnosticoInvalidoException {
+    if (!esDiagnosticoValido(diagnostico)) {
+        // Tirar excepción si el diagnóstico no es válido, para que lo maneje el me
+        throw new DiagnosticoInvalidoException("Diagnóstico inválido: '" + diagnostico + 
+            "'. Los diagnósticos permitidos son: " + String.join(", ", DIAGNOSTICOS_PERMITIDOS));
         }
-        return false;
+        this.diagnostico = diagnostico;
     }
 
     // Método para validar diagnóstico sin asignar

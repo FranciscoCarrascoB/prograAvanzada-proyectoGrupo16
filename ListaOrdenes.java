@@ -30,6 +30,13 @@ public class ListaOrdenes {
         return null;
     }
 
+    public OrdenTrabajo eliminarOrden(int indice) {
+        if (indice < 0 || indice >= ordenes.size()) {
+            throw new IndexOutOfBoundsException("Índice de orden fuera de rango.");
+        }
+        return ordenes.remove(indice);
+    }
+
     public void listarOrdenes() {
         if (ordenes.isEmpty())
             return;
