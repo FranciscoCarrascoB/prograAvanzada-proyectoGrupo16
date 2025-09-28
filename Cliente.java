@@ -20,9 +20,9 @@ public class Cliente extends Persona {
         puntosFidelidad += puntos;
     }
 
-    // SIA 2.7: Implementación de sobreescritura del método obtenerInformacion()
+    // SIA 2.7 - Implementación de sobreescritura del método obtenerInformacion()
     @Override
     public String obtenerInformacion() {
-        return "Trabajador: " + nombre + " (RUT: " + rut + " Puntos de fidelidad: " + puntosFidelidad + ")";
+        return "Cliente: " + nombre + " (Puntos de fidelidad: " + puntosFidelidad + ", RUT: " + rut + ")";
     }
 }

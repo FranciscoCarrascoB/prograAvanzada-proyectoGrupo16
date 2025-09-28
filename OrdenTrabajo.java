@@ -8,14 +8,21 @@ public class OrdenTrabajo {
     private ArrayList<Analisis> listaAnalisis;  // Objeto de tipo Analisis vinculado a la orden
     private String estado;  // Estado en el que se encuentra la orden de trabajo (En proceso, finalizada)
     private LocalDate fechaEstimada;    // Fecha estimada de finalizacion de orden ,formato (año-mes-dia)
+    // Estados posibles para la orden de trabajo
+    private static Set<String> estadosPosibles = new HashSet<>();
+
 
     // Constructor por defecto (sin fecha)
     public OrdenTrabajo(Cliente cliente, Trabajador encargado, String estado) {
         this.cliente = cliente;
         this.encargado = encargado;
         this.listaAnalisis = new ArrayList<>();
+        estadosPosibles.add("En progreso");
+        estadosPosibles.add("Completada");
+        estadosPosibles.add("Atrasada");
         setEstado(estado);
         this.fechaEstimada = (LocalDate.now()).plusDays(7); // Asigna fecha estimada a la proxima semana
+        // Definir los estados posibles
     }
 
     // Constructor con fecha
@@ -23,8 +30,12 @@ public class OrdenTrabajo {
         this.cliente = cliente;
         this.encargado = encargado;
         this.listaAnalisis = new ArrayList<>();
+        estadosPosibles.add("En progreso");
+        estadosPosibles.add("Completada");
+        estadosPosibles.add("Atrasada");
         setEstado(estado);
         setFechaEstimada(fechaEstimada); // Asigna fecha estimada a lo ingresado por el usuario
+        // Definir los estados posibles
     }
 
     // Getters
@@ -56,6 +67,14 @@ public class OrdenTrabajo {
         return fechaEstimadaString;
     }
 
+    public Set<String> getEstadosPosibles() {
+        return new HashSet<>(estadosPosibles);
+    }
+
+    public static String getEstadosPosiblesStringDescriptivo() {
+        return "\n" + String.join(", ", estadosPosibles);
+    }
+
     // Setters
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
@@ -66,19 +85,21 @@ public class OrdenTrabajo {
     }
 
     public boolean setEstado(String estado) {
-        //Se definen los estados posibles
-        Set<String> estadosPosibles = new HashSet<>();
-        estadosPosibles.add("En progreso");
-        estadosPosibles.add("Completada");
-        estadosPosibles.add("Atrasada");
-
+        // Definir los estados posibles si no han sido definidos aún (carga CSV)
+        if (estadosPosibles.isEmpty()) {
+            estadosPosibles.add("En progreso");
+            estadosPosibles.add("Completada");
+            estadosPosibles.add("Atrasada");
+        }
+        
         if(!estadosPosibles.contains(estado)) { //Si el estado ingresado no existe, retorna falso
             this.estado = "Desconocido";
             return false;
         }
-
-        else this.estado = estado;  //Si no, definir como estado ingresado y retorna true
-        return true;
+        else {
+            this.estado = estado; // Si no, definir como estado ingresado y retorna true
+            return true;
+        }
     }
 
     public void setFechaEstimada(String fechaEstimada) {//
@@ -110,6 +131,10 @@ public class OrdenTrabajo {
     }
 
     // Métodos
+
+    public static boolean esEstadoValido(String estado) {
+        return estadosPosibles.contains(estado);
+    }
 
     public void agregarAnalisis(Analisis analisis) {
         this.listaAnalisis.add(analisis);

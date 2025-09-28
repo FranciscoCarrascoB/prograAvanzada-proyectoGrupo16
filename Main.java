@@ -1,5 +1,16 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Main {
     private static ListaOrdenes listaOrdenes = new ListaOrdenes();
@@ -8,42 +19,11 @@ public class Main {
     public static void main(String[] args) {
 
         // Datos iniciales
-
-        // Clientes
-        Cliente cliente1 = new Cliente("12.345.678-9", "Pedro Rodriguez");
-        Cliente cliente2 = new Cliente("11.111.111-1", "Maria Gonzalez");
-
-        // Trabajadores
-        Trabajador trabajador1 = new Trabajador("17.111.622-8", "Carlos Lopez");
-        Trabajador trabajador2 = new Trabajador("10.039.628-9", "Ana Martinez");
-    
-        // Ordenes de trabajo
-        OrdenTrabajo orden1 = new OrdenTrabajo(cliente1, trabajador1, "En proceso", "1 semana");
-        OrdenTrabajo orden2 = new OrdenTrabajo(cliente2, trabajador2, "En proceso", "1 mes");
-
-        // Crear análisis para orden 1
-        Analisis analisis1_1 = new Analisis("Monitor no enciende", "Hardware");
-        analisis1_1.setPiezasNecesarias(new ArrayList<String>() {{ add("SKU-PANT-001"); }});
-        Analisis analisis1_2 = new Analisis("Teclado no responde", "Perifericos");
-        analisis1_2.setPiezasNecesarias(); // Usar sugerencias automáticas
-        
-        // Crear análisis para orden 2
-        Analisis analisis2_1 = new Analisis("Sistema operativo corrupto", "Software");
-        analisis2_1.setPiezasNecesarias(); // Usar sugerencias automáticas
-        Analisis analisis2_2 = new Analisis("No hay conexion a internet", "Red");
-        analisis2_2.setPiezasNecesarias(); // Usar sugerencias automáticas
-
-        // Agregar análisis a las órdenes
-        orden1.agregarAnalisis(analisis1_1);
-        orden1.agregarAnalisis(analisis1_2);
-        orden2.agregarAnalisis(analisis2_1);
-        orden2.agregarAnalisis(analisis2_2);
-
-        // Agregar órdenes a la lista
-        listaOrdenes.agregarOrden(orden1);
-        listaOrdenes.agregarOrden(orden2);
+        // SIA 2.2 - Carga inicial de datos desde el archivo CSV
+        listaOrdenes = cargarDatos();
 
         System.out.println("=== SISTEMA DE ORDENES DE TRABAJO ===");
+        System.out.println("Datos cargados exitosamente. " + listaOrdenes.getCantidadOrdenes() + " orden(es) en el sistema.");
         
         int opcion;
         do {
@@ -74,6 +54,15 @@ public class Main {
                         mostrarOrdenesYAnalisis();
                         break;
                     case 8:
+                        buscarOrdenPorIndice();
+                        break;
+                    case 9:
+                        buscarOrdenesPorEstado();
+                        break;
+                    case 10:
+                        generarReporteTXT();
+                        break;
+                    case 11:
                         System.out.println("¡Gracias por usar el sistema!");
                         // Salir
                         break;
@@ -85,12 +74,16 @@ public class Main {
                 System.out.println("Por favor, intente nuevamente.");
             }
             
-            if (opcion != 8) {
+            if (opcion != 11) {
                 System.out.println("\nPresione Enter para continuar...");
                 scanner.nextLine();
             }
             
-        } while (opcion != 8);
+        } while (opcion != 11);
+
+        // SIA 2.2 - Guardado de datos al salir de la aplicación
+        guardarDatos(listaOrdenes);
+        System.out.println("Datos guardados exitosamente en ordenes.csv.");
         
         scanner.close();
     }
@@ -103,15 +96,20 @@ public class Main {
         System.out.println("1. Agregar Orden de Trabajo");
         System.out.println("2. Modificar Orden de Trabajo");
         System.out.println("3. Eliminar Orden de Trabajo");
-        System.out.println("\n--- Gestión de Análisis ---");
+        System.out.println("--- Gestión de Análisis ---");
         System.out.println("4. Agregar Analisis a una Orden");
         System.out.println("5. Editar Analisis");
         System.out.println("6. Eliminar Analisis");
-        System.out.println("\n--- Sistema ---");
+        System.out.println("--- Sistema ---");
         System.out.println("7. Mostrar Ordenes + Analisis");
-        System.out.println("8. Salir");
+        System.out.println("--- Búsqueda ---"); // SIA 2.13
+        System.out.println("8. Buscar Orden por Índice");
+        System.out.println("--- Funcionalidades Especiales ---"); // SIA 2.5
+        System.out.println("9. Buscar Ordenes por Estado");
+        System.out.println("10. Generar Reporte .txt"); // SIA 2.10
+        System.out.println("\n11. Salir");
         System.out.println("==========================================");
-        System.out.print("Seleccione una opcion (1-8): ");
+        System.out.print("Seleccione una opcion (1-11): ");
     }
 
     // MÉTODO AUXILIAR: Leer opción del menú
@@ -122,6 +120,176 @@ public class Main {
         } catch (NumberFormatException e) {
             return -1; // Opción inválida
         }
+    }
+
+    // SIA 2.2 - Carga de datos desde un archivo CSV al iniciar la aplicación
+    private static ListaOrdenes cargarDatos() {
+        String nombreArchivo = "ordenes.csv";
+        ListaOrdenes nuevasOrdenes = new ListaOrdenes();
+        // Usamos un HashMap para agrupar los análisis en la orden correcta usando el orden_id
+        Map<String, OrdenTrabajo> ordenesMap = new HashMap<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(nombreArchivo))) {
+            String linea;
+            reader.readLine(); // Omitir la línea de la cabecera
+
+            while ((linea = reader.readLine()) != null) {
+                String[] campos = linea.split(",");
+                if (campos.length < 10) continue; // Ignorar líneas malformadas
+
+                String ordenId = campos[0].trim(); // Eliminar espacios en blanco
+                
+                OrdenTrabajo ordenActual;
+
+                // Si es la primera vez que vemos este ID, creamos la Orden de Trabajo
+                if (!ordenesMap.containsKey(ordenId)) {
+                    Cliente cliente = new Cliente(campos[1].trim(), campos[2].trim());
+                    Trabajador trabajador = new Trabajador(campos[3].trim(), campos[4].trim());
+                    String fechaEstimada = campos[6].trim();
+                    
+                    ordenActual = new OrdenTrabajo(cliente, trabajador, campos[5].trim(), fechaEstimada);
+                    ordenesMap.put(ordenId, ordenActual);
+                } else {
+                    // Si el ID ya existe, obtenemos la orden existente para agregarle otro análisis
+                    ordenActual = ordenesMap.get(ordenId);
+                }
+
+                // Creamos y agregamos el análisis a la orden (si existe)
+                String descripcion = campos[7].trim();
+                if (!descripcion.isEmpty()) {
+                    Analisis analisis = new Analisis(descripcion, campos[8].trim());
+                    
+                    // Procesar la lista de piezas
+                    String piezasString = campos[9].trim();
+                    if (!piezasString.isEmpty()) {
+                        String[] piezasSku = piezasString.split("\\|");
+                        ArrayList<String> piezasList = new ArrayList<>();
+                        for (String sku : piezasSku) {
+                            if (!sku.trim().isEmpty()) {
+                                piezasList.add(sku.trim());
+                            }
+                        }
+                        analisis.setPiezasNecesarias(piezasList);
+                    } else {
+                        // Si no hay SKUs, usar piezas por defecto
+                        analisis.setPiezasNecesarias();
+                    }
+                    
+                    ordenActual.agregarAnalisis(analisis);
+                }
+            }
+
+            // Una vez procesado todo el archivo, agregamos las órdenes del mapa a la lista final
+            for (OrdenTrabajo orden : ordenesMap.values()) {
+                nuevasOrdenes.agregarOrden(orden);
+            }
+
+        } catch (FileNotFoundException e) {
+            System.out.println("Archivo 'ordenes.csv' no encontrado. Se iniciará con una lista vacía.");
+        } catch (IOException e) {
+            System.out.println("Error al leer el archivo de datos: " + e.getMessage());
+            e.printStackTrace(); // Para debug
+        }
+
+        System.out.println("Órdenes cargadas: " + nuevasOrdenes.getOrdenes().size());
+        for (OrdenTrabajo orden : nuevasOrdenes.getOrdenes()) {
+            try {
+                System.out.println("Orden cliente: " + orden.getCliente().getNombre() + 
+                                ", análisis: " + orden.getListaAnalisis().size());
+            } catch (ListaAnalisisVaciaException e) {
+                System.out.println("Orden cliente: " + orden.getCliente().getNombre() + 
+                                ", sin análisis");
+            }
+        }
+        
+        return nuevasOrdenes;
+    }
+
+    // SIA 2.2 - Guardado de datos a un archivo CSV al salir de la aplicación
+    private static void guardarDatos(ListaOrdenes ordenes) {
+        String nombreArchivo = "ordenes.csv";
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo))) {
+            // Escribir la cabecera del CSV
+            writer.write("orden_id,cliente_rut,cliente_nombre,trabajador_rut,trabajador_nombre,estado,fecha_estimada,analisis_descripcion,analisis_diagnostico,analisis_piezas_sku");
+            writer.newLine();
+
+            int ordenIdCounter = 0;
+            for (OrdenTrabajo orden : ordenes.getOrdenes()) {
+                ordenIdCounter++; // Asignamos un ID interno secuencial a cada orden
+                
+                // Si una orden no tiene análisis, igual la guardamos con campos de análisis vacíos
+                try {
+                    // Intentar obtener la lista de análisis
+                    ArrayList<Analisis> listaAnalisis = orden.getListaAnalisis();
+                    for (Analisis analisis : listaAnalisis) {
+                        escribirLineaCSV(writer, ordenIdCounter, orden, analisis);
+                    }
+                } catch (ListaAnalisisVaciaException e) {
+                    // Si no hay análisis, guardar con campos de análisis vacíos
+                    escribirLineaCSV(writer, ordenIdCounter, orden, null);
+                }
+            }
+            
+            writer.flush(); // Forzar escritura al disco
+            
+        } catch (IOException e) {
+            System.out.println("Error al guardar los datos en el archivo: " + e.getMessage());
+            e.printStackTrace(); // Para debug
+        }
+    }
+
+    // MÉTODO AUXILIAR: Escribir una línea del CSV
+    private static void escribirLineaCSV(BufferedWriter writer, int ordenId, OrdenTrabajo orden, Analisis analisis) throws IOException {
+        StringBuilder linea = new StringBuilder();
+        
+        // Agregar datos básicos de la orden
+        linea.append(ordenId).append(",");
+        linea.append(escaparCampoCSV(orden.getCliente().getRut())).append(",");
+        linea.append(escaparCampoCSV(orden.getCliente().getNombre())).append(",");
+        linea.append(escaparCampoCSV(orden.getEncargado().getRut())).append(",");
+        linea.append(escaparCampoCSV(orden.getEncargado().getNombre())).append(",");
+        linea.append(escaparCampoCSV(orden.getEstado())).append(",");
+        
+        // Fecha estimada en formato día-mes-año
+        linea.append(escaparCampoCSV(orden.getFechaEstimada())).append(",");
+        
+        if (analisis != null) {
+            // Agregar datos del análisis
+            linea.append(escaparCampoCSV(analisis.getDescripcionProblema())).append(",");
+            linea.append(escaparCampoCSV(analisis.getDiagnostico())).append(",");
+            
+            // Manejar las piezas necesarias
+            List<String> piezas = analisis.getPiezasNecesarias();
+            if (piezas != null && !piezas.isEmpty()) {
+                String piezasSku = String.join("|", piezas);
+                linea.append(escaparCampoCSV(piezasSku));
+            } else {
+                linea.append(""); // Campo vacío
+            }
+        } else {
+            // Campos de análisis vacíos
+            linea.append(",").append(",").append("");
+        }
+        
+        writer.write(linea.toString());
+        writer.newLine();
+    }
+
+    // MÉTODO AUXILIAR: Escapar campos CSV que contengan comas, comillas o saltos de línea
+    private static String escaparCampoCSV(String campo) {
+        if (campo == null) {
+            return "";
+        }
+        
+        // Si el campo contiene comas, comillas o saltos de línea, necesita ser escapado
+        if (campo.contains(",") || campo.contains("\"") || campo.contains("\n")) {
+            // Escapar comillas duplicándolas
+            String campoEscapado = campo.replace("\"", "\"\"");
+            return "\"" + campoEscapado + "\"";
+        }
+        
+        return campo;
     }
 
     // Opción 1: Agregar Orden de Trabajo
@@ -231,7 +399,7 @@ public class Main {
         }
     }
 
-    // METODO AUXILIAR: Seleccionar índice de orden
+    // MÉTODO AUXILIAR: Seleccionar índice de orden
     private static int seleccionarIndiceOrden() {
         try {
             System.out.print("\nIngrese el numero de la orden (1-" + listaOrdenes.getCantidadOrdenes() + "): ");
@@ -305,7 +473,7 @@ public class Main {
         }
     }
 
-    // Opción 4: Eliminar Orden de Trabajo
+    // Opción 3: Eliminar Orden de Trabajo
      private static void eliminarOrdenTrabajo() {
         System.out.println("\n=== ELIMINAR ORDEN DE TRABAJO ===");
         
@@ -335,7 +503,7 @@ public class Main {
         }
     }
 
-    // Opción 5: Agregar Análisis a una Orden
+    // Opción 4: Agregar Análisis a una Orden
     private static void agregarAnalisisAOrden() {
         System.out.println("\n=== AGREGAR ANALISIS A ORDEN ===");
         
@@ -722,6 +890,215 @@ public class Main {
             System.out.println("Error: " + e.getMessage());
         } catch (Exception e) {
             System.out.println("Error inesperado al mostrar ordenes: " + e.getMessage());
+        }
+    }
+
+    // Opción 8: Buscar Orden por Índice
+    public static void buscarOrdenPorIndice() {
+        System.out.println("\n=== BUSCAR ORDEN POR INDICE ===");
+        
+        if (listaOrdenes.getCantidadOrdenes() == 0) {
+            System.out.println("No hay ordenes registradas en el sistema.");
+            return;
+        }
+        
+        System.out.print("Ingrese # de la orden a buscar (1 a " + listaOrdenes.getCantidadOrdenes() + "): ");
+        int indice;
+        
+        try {
+            indice = Integer.parseInt(scanner.nextLine().trim()) - 1; // Convertir a índice base 0
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Debe ingresar un numero valido.");
+            return;
+        }
+
+        try {
+            OrdenTrabajo orden = listaOrdenes.obtenerOrden(indice);
+            
+            System.out.println("\n=== INFORMACION DE LA ORDEN ===");
+            System.out.println("ORDEN #" + (indice + 1));
+            System.out.println(orden.getCliente().obtenerInformacion());
+            System.out.println(orden.getEncargado().obtenerInformacion());
+            System.out.println("Estado: " + orden.getEstado());
+            System.out.println("Fecha estimada: " + orden.getFechaEstimada());
+            System.out.println("Cantidad de analisis: " + orden.getListaAnalisis().size());
+            
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Error: El numero de orden ingresado no existe.");
+        } catch (Exception e) {
+            System.out.println("Error inesperado al buscar la orden: " + e.getMessage());
+        }
+    }
+
+    // Opción 9: Buscar Órdenes por Estado (SIA 2.5)
+    private static void buscarOrdenesPorEstado() {
+        System.out.println("\n=== BUSCAR ORDENES POR ESTADO ===");
+        
+        try {
+            // Verificar si hay órdenes
+            if (!listaOrdenes.tieneOrdenes()) {
+                throw new IllegalStateException("No hay ordenes de trabajo registradas para buscar.");
+            }
+            
+            // Solicitar estado a buscar
+            System.out.print("\nIngrese el estado a buscar: \n");
+            System.out.print("(Los estados disponibles son ");
+            System.out.println(OrdenTrabajo.getEstadosPosiblesStringDescriptivo() + ")");
+            String estadoBuscado = scanner.nextLine().trim();
+            
+            if (estadoBuscado.isEmpty()) {
+                throw new IllegalArgumentException("El estado no puede estar vacio.");
+            }
+
+            if (!OrdenTrabajo.esEstadoValido(estadoBuscado)) {
+                throw new IllegalArgumentException("El estado ingresado no es valido.");
+            }
+            
+            // Filtrar órdenes por estado
+            ArrayList<OrdenTrabajo> ordenesFiltradas = filtrarOrdenesPorEstado(estadoBuscado);
+            
+            // Mostrar resultados
+            mostrarResultadosBusquedaEstado(estadoBuscado, ordenesFiltradas);
+            
+        } catch (IllegalStateException | IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Error inesperado al buscar ordenes por estado: " + e.getMessage());
+        }
+    }
+
+    // MÉTODO AUXILIAR: Mostrar resultados de búsqueda por estado
+    private static ArrayList<OrdenTrabajo> filtrarOrdenesPorEstado(String estadoBuscado) {
+        ArrayList<OrdenTrabajo> ordenesFiltradas = new ArrayList<>();
+        
+        // Recorrer todas las órdenes y filtrar por estado (ignorar mayúsculas/minúsculas)
+        for (int i = 0; i < listaOrdenes.getCantidadOrdenes(); i++) {
+            OrdenTrabajo orden = listaOrdenes.obtenerOrden(i);
+            
+            if (orden.getEstado().equalsIgnoreCase(estadoBuscado)) {
+                ordenesFiltradas.add(orden);
+            }
+        }
+        
+        return ordenesFiltradas;
+    }
+
+    // MÉTODO AUXILIAR: Mostrar resultados de búsqueda por estado
+    private static void mostrarResultadosBusquedaEstado(String estadoBuscado, ArrayList<OrdenTrabajo> ordenesFiltradas) {
+        System.out.println("\n--- RESULTADOS DE BUSQUEDA ---");
+        System.out.println("Estado buscado: '" + estadoBuscado + "'");
+        System.out.println("Ordenes encontradas: " + ordenesFiltradas.size());
+        
+        if (ordenesFiltradas.isEmpty()) {
+            System.out.println("\nNo se encontraron ordenes con el estado especificado.");
+        } else {
+            System.out.println("\n==========================================");
+            
+            for (int i = 0; i < ordenesFiltradas.size(); i++) {
+                OrdenTrabajo orden = ordenesFiltradas.get(i);
+                int numeroOrdenOriginal = encontrarNumeroOrdenOriginal(orden);
+                
+                System.out.println("ORDEN #" + numeroOrdenOriginal);
+                System.out.println("Cliente: " + orden.getCliente().getNombre() + " (" + orden.getCliente().getRut() + ")");
+                System.out.println("Encargado: " + orden.getEncargado().getNombre() + " (" + orden.getEncargado().getRut() + ")");
+                System.out.println("Estado: " + orden.getEstado());
+                System.out.println("Fecha estimada: " + orden.getFechaEstimada());
+                System.out.println("Cantidad de analisis: " + orden.getListaAnalisis().size());
+                
+                if (i < ordenesFiltradas.size() - 1) {
+                    System.out.println("------------------------------------------");
+                }
+            }
+            System.out.println("==========================================");
+        }
+    }
+
+    // MÉTODO AUXILIAR: Encontrar el número original de la orden en la lista completa
+    private static int encontrarNumeroOrdenOriginal(OrdenTrabajo ordenBuscada) {
+        for (int i = 0; i < listaOrdenes.getCantidadOrdenes(); i++) {
+            OrdenTrabajo orden = listaOrdenes.obtenerOrden(i);
+            if (orden == ordenBuscada) {  // Comparación por referencia
+                return i + 1; // Retorna número de orden (base 1)
+            }
+        }
+        return -1; // No encontrada (no debería pasar)
+    }
+
+    // SIA 2.10 - Generar un reporte en archivo .txt
+    private static void generarReporteTXT() {
+        String nombreArchivo = "reporte_sistema.txt";
+        System.out.println("\nGenerando reporte en " + nombreArchivo + "...");
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo))) {
+            // Calcular estadísticas generales
+            int totalOrdenes = listaOrdenes.getCantidadOrdenes();
+            int totalAnalisis = 0;
+            Map<String, Integer> conteoPorEstado = new HashMap<>();
+
+            for (OrdenTrabajo orden : listaOrdenes.getOrdenes()) {
+                // Contar análisis
+                try {
+                    totalAnalisis += orden.getListaAnalisis().size();
+                } catch (ListaAnalisisVaciaException e) {
+                    // No sumar nada si no hay análisis
+                }
+
+                // Contar órdenes por estado
+                String estado = orden.getEstado();
+                conteoPorEstado.put(estado, conteoPorEstado.getOrDefault(estado, 0) + 1);
+            }
+
+            // Escribir encabezado y resumen
+            writer.write("=========================================\n");
+            writer.write("        REPORTE DEL SISTEMA\n");
+            writer.write("=========================================\n");
+            writer.write("Fecha del reporte: " + LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) + "\n");
+            writer.write("\n--- RESUMEN GENERAL ---\n");
+            writer.write("Total de Órdenes de Trabajo: " + totalOrdenes + "\n");
+            writer.write("Total de Análisis registrados: " + totalAnalisis + "\n");
+            writer.write("\n--- ÓRDENES POR ESTADO ---\n");
+            if (conteoPorEstado.isEmpty()) {
+                writer.write("No hay órdenes registradas.\n");
+            } else {
+                for (Map.Entry<String, Integer> entry : conteoPorEstado.entrySet()) {
+                    writer.write("- " + entry.getKey() + ": " + entry.getValue() + " orden(es)\n");
+                }
+            }
+            writer.write("\n=========================================\n");
+            writer.write("        DETALLE DE ÓRDENES\n");
+            writer.write("=========================================\n\n");
+
+            // Escribir detalle de cada orden
+            int ordenIndex = 1;
+            for (OrdenTrabajo orden : listaOrdenes.getOrdenes()) {
+                writer.write("--- ORDEN #" + ordenIndex + " ---\n");
+                writer.write(orden.getCliente().obtenerInformacion() + "\n");
+                writer.write(orden.getEncargado().obtenerInformacion() + "\n");
+                writer.write("Estado: " + orden.getEstado() + "\n");
+                writer.write("Fecha Estimada de Entrega: " + orden.getFechaEstimada() + "\n");
+                
+                try {
+                    ArrayList<Analisis> analisisDeLaOrden = orden.getListaAnalisis();
+                    writer.write("Análisis Asociados (" + analisisDeLaOrden.size() + "):\n");
+                    int analisisIndex = 1;
+                    for (Analisis analisis : analisisDeLaOrden) {
+                        writer.write("  " + analisisIndex + ". Descripción: " + analisis.getDescripcionProblema() + "\n");
+                        writer.write("     Diagnóstico: " + analisis.getDiagnostico() + "\n");
+                        writer.write("     Piezas Requeridas (SKU): " + String.join(", ", analisis.getPiezasNecesarias()) + "\n");
+                        analisisIndex++;
+                    }
+                } catch (ListaAnalisisVaciaException e) {
+                    writer.write("Análisis Asociados: Esta orden no tiene análisis registrados.\n");
+                }
+                writer.write("\n-----------------------------------------\n\n");
+                ordenIndex++;
+            }
+
+            System.out.println("¡Reporte generado exitosamente!");
+
+        } catch (IOException e) {
+            System.out.println("Error al generar el reporte: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

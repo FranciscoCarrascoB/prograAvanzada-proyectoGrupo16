@@ -8,9 +8,19 @@ public class Trabajador extends Persona {
         this.rol = "Técnico"; // Asigna rol por defecto
     }
 
-    // SIA 2.7: Implementación de sobreescritura del método obtenerInformacion()
+    // Getters
+    public String getRol() {
+        return rol;
+    }
+
+    // Setters
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
+
+    // SIA 2.7 - Implementación de sobreescritura del método obtenerInformacion()
     @Override
     public String obtenerInformacion() {
-        return "Trabajador: " + nombre + " (" + rol + " , RUT: " + rut + ")";
+        return "Trabajador: " + nombre + " (" + rol + ", RUT: " + rut + ")";
     }
 }

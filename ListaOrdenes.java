@@ -8,6 +8,11 @@ public class ListaOrdenes {
         this.ordenes = new ArrayList<>();
     }
 
+    // Getters
+    public ArrayList<OrdenTrabajo> getOrdenes() {
+        return new ArrayList<>(ordenes); // Retorna una copia para evitar modificaciones externas
+    }
+
     // Métodos
 
     public void agregarOrden(OrdenTrabajo orden) {

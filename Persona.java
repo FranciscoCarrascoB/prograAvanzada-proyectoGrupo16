@@ -25,6 +25,6 @@ public abstract class Persona {
         this.nombre = nombre;
     }
     
-    // SIA 2.7: Método a sobrescribir en las subclases (Cliente y Trabajador)
+    // SIA 2.7: Método abstracto que deben implementar las subclases (Cliente y Trabajador)
     public abstract String obtenerInformacion();
 }

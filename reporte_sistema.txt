@@ -1,0 +1,58 @@
+=========================================
+        REPORTE DEL SISTEMA
+=========================================
+Fecha del reporte: 27-09-2025
+
+--- RESUMEN GENERAL ---
+Total de Órdenes de Trabajo: 3
+Total de Análisis registrados: 5
+
+--- ÓRDENES POR ESTADO ---
+- En progreso: 3 orden(es)
+
+=========================================
+        DETALLE DE ÓRDENES
+=========================================
+
+--- ORDEN #1 ---
+Cliente: Pedro Rodriguez (Puntos de fidelidad: 0, RUT: 12.345.678-9)
+Trabajador: Carlos Lopez (Técnico, RUT: 17.111.622-8)
+Estado: En progreso
+Fecha Estimada de Entrega: 04-10-2025
+Análisis Asociados (2):
+  1. Descripción: Monitor no enciende
+     Diagnóstico: Hardware
+     Piezas Requeridas (SKU): SKU-PANT-001
+  2. Descripción: Teclado no responde
+     Diagnóstico: Perifericos
+     Piezas Requeridas (SKU): SKU-TECLADO-001, SKU-MOUSE-001
+
+-----------------------------------------
+
+--- ORDEN #2 ---
+Cliente: Maria Gonzalez (Puntos de fidelidad: 0, RUT: 11.111.111-1)
+Trabajador: Ana Martinez (Técnico, RUT: 10.039.628-9)
+Estado: En progreso
+Fecha Estimada de Entrega: 04-10-2025
+Análisis Asociados (2):
+  1. Descripción: Sistema operativo corrupto
+     Diagnóstico: Software
+     Piezas Requeridas (SKU): SKU-SO-001, SKU-OFFICE-001
+  2. Descripción: No hay conexion a internet
+     Diagnóstico: Red
+     Piezas Requeridas (SKU): SKU-NIC-001, SKU-CABLE-001
+
+-----------------------------------------
+
+--- ORDEN #3 ---
+Cliente: a (Puntos de fidelidad: 0, RUT: a)
+Trabajador: a (Técnico, RUT: a)
+Estado: En progreso
+Fecha Estimada de Entrega: 04-10-2025
+Análisis Asociados (1):
+  1. Descripción: Malo
+     Diagnóstico: Hardware
+     Piezas Requeridas (SKU): SKU-CPU-001, SKU-RAM-001
+
+-----------------------------------------
+

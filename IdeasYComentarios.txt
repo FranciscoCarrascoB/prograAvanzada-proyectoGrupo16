@@ -1,1 +1,0 @@
-- Cliente y Trabajador son clases diferentes, pero a nivel de concepto no tienen diferencias significativas (posible uso de herencia / clase Persona).
