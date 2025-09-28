@@ -1,0 +1,16 @@
+=========================================
+        REPORTE DEL SISTEMA
+=========================================
+Fecha del reporte: 28-09-2025
+
+--- RESUMEN GENERAL ---
+Total de Órdenes de Trabajo: 0
+Total de Análisis registrados: 0
+
+--- ÓRDENES POR ESTADO ---
+No hay órdenes registradas.
+
+=========================================
+        DETALLE DE ÓRDENES
+=========================================
+

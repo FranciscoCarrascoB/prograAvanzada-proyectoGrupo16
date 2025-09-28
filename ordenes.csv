@@ -1,5 +1,0 @@
-orden_id,cliente_rut,cliente_nombre,trabajador_rut,trabajador_nombre,estado,fecha_estimada,analisis_descripcion,analisis_diagnostico,analisis_piezas_sku
-1,12.345.678-9,Pedro Rodriguez,17.111.622-8,Carlos Lopez,En progreso,04-10-2025,Monitor no enciende,Hardware,SKU-PANT-001
-1,12.345.678-9,Pedro Rodriguez,17.111.622-8,Carlos Lopez,En progreso,04-10-2025,Teclado no responde,Perifericos,SKU-TECLADO-001|SKU-MOUSE-001
-2,11.111.111-1,Maria Gonzalez,10.039.628-9,Ana Martinez,En progreso,04-10-2025,Sistema operativo corrupto,Software,SKU-SO-001|SKU-OFFICE-001
-2,11.111.111-1,Maria Gonzalez,10.039.628-9,Ana Martinez,En progreso,04-10-2025,No hay conexion a internet,Red,SKU-NIC-001|SKU-CABLE-001

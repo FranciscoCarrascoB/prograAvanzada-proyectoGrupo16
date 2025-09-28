@@ -1,0 +1,31 @@
+=========================================
+        REPORTE DEL SISTEMA
+=========================================
+Fecha del reporte: 28-09-2025
+
+--- RESUMEN GENERAL ---
+Total de Órdenes de Trabajo: 1
+Total de Análisis registrados: 2
+
+--- ÓRDENES POR ESTADO ---
+- En progreso: 1 orden(es)
+
+=========================================
+        DETALLE DE ÓRDENES
+=========================================
+
+--- ORDEN #1 ---
+Cliente: Pedro Rodriguez (Puntos de fidelidad: 0, RUT: 12.345.678-9)
+Trabajador: Carlos Lopez (Técnico, RUT: 17.111.622-8)
+Estado: En progreso
+Fecha Estimada de Entrega: 05-10-2025
+Análisis Asociados (2):
+  1. Descripción: Monitor no enciende
+     Diagnóstico: Hardware
+     Piezas Requeridas (SKU): SKU-PANT-001
+  2. Descripción: Teclado no responde
+     Diagnóstico: Perifericos
+     Piezas Requeridas (SKU): SKU-TECLADO-001, SKU-MOUSE-001
+
+-----------------------------------------
+

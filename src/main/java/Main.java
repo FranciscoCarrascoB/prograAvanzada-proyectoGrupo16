@@ -83,7 +83,7 @@ public class Main {
 
         // SIA 2.2 - Guardado de datos al salir de la aplicación
         guardarDatos(listaOrdenes);
-        System.out.println("Datos guardados exitosamente en ordenes.csv.");
+        System.out.println("Datos guardados exitosamente en src/main/resources/ordenes.csv.");
         
         scanner.close();
     }
@@ -129,11 +129,24 @@ public class Main {
         // Usamos un HashMap para agrupar los análisis en la orden correcta usando el orden_id
         Map<String, OrdenTrabajo> ordenesMap = new HashMap<>();
 
-        try (BufferedReader reader = new BufferedReader(new FileReader(nombreArchivo))) {
-            String linea;
-            reader.readLine(); // Omitir la línea de la cabecera
+        // Intentar leer desde recursos primero, luego desde directorio actual
+        try {
+            BufferedReader reader = null;
+            
+            // Intentar leer desde resources (para Gradle/Maven)
+            var inputStream = Main.class.getClassLoader().getResourceAsStream(nombreArchivo);
+            if (inputStream != null) {
+                reader = new BufferedReader(new java.io.InputStreamReader(inputStream));
+            } else {
+                // Si no existe en resources, intentar leer desde directorio actual
+                reader = new BufferedReader(new FileReader(nombreArchivo));
+            }
 
-            while ((linea = reader.readLine()) != null) {
+            try (BufferedReader br = reader) {
+                String linea;
+                br.readLine(); // Omitir la línea de la cabecera
+
+                while ((linea = br.readLine()) != null) {
                 String[] campos = linea.split(",");
                 if (campos.length < 10) continue; // Ignorar líneas malformadas
 
@@ -179,11 +192,11 @@ public class Main {
                 }
             }
 
-            // Una vez procesado todo el archivo, agregamos las órdenes del mapa a la lista final
-            for (OrdenTrabajo orden : ordenesMap.values()) {
-                nuevasOrdenes.agregarOrden(orden);
+                // Una vez procesado todo el archivo, agregamos las órdenes del mapa a la lista final
+                for (OrdenTrabajo orden : ordenesMap.values()) {
+                    nuevasOrdenes.agregarOrden(orden);
+                }
             }
-
         } catch (FileNotFoundException e) {
             System.out.println("Archivo 'ordenes.csv' no encontrado. Se iniciará con una lista vacía.");
         } catch (IOException e) {
@@ -207,7 +220,7 @@ public class Main {
 
     // SIA 2.2 - Guardado de datos a un archivo CSV al salir de la aplicación
     private static void guardarDatos(ListaOrdenes ordenes) {
-        String nombreArchivo = "ordenes.csv";
+        String nombreArchivo = "src/main/resources/ordenes.csv";
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo))) {
             // Escribir la cabecera del CSV
@@ -1026,7 +1039,7 @@ public class Main {
 
     // SIA 2.10 - Generar un reporte en archivo .txt
     private static void generarReporteTXT() {
-        String nombreArchivo = "reporte_sistema.txt";
+        String nombreArchivo = "src/main/resources/reporte_sistema.txt";
         System.out.println("\nGenerando reporte en " + nombreArchivo + "...");
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(nombreArchivo))) {
